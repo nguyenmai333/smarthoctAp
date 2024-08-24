@@ -4,10 +4,10 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import pkg_resources
 router = APIRouter()
 
-envit5_tokenizer = AutoTokenizer.from_pretrained(pkg_resources.resource_filename('modules.routes', 'pretrain_models/envit5-translation'))
-envit5_model = AutoModelForSeq2SeqLM.from_pretrained(pkg_resources.resource_filename('modules.routes', 'pretrain_models/envit5-translation'))
-mbart_tokenizer = AutoTokenizer.from_pretrained(pkg_resources.resource_filename('modules.routes', 'pretrain_models/bart-large-cnn'))
-mbart_model = AutoModelForSeq2SeqLM.from_pretrained(pkg_resources.resource_filename('modules.routes', 'pretrain_models/bart-large-cnn'))
+envit5_tokenizer = AutoTokenizer.from_pretrained(pkg_resources.resource_filename('modules.pretrain_models', 'envit5-translation'))
+envit5_model = AutoModelForSeq2SeqLM.from_pretrained(pkg_resources.resource_filename('modules.pretrain_models', 'envit5-translation'))
+mbart_tokenizer = AutoTokenizer.from_pretrained(pkg_resources.resource_filename('modules.pretrain_models', 'bart-large-cnn'))
+mbart_model = AutoModelForSeq2SeqLM.from_pretrained(pkg_resources.resource_filename('modules.pretrain_models', 'bart-large-cnn'))
 
 @router.post("/summarize/")
 async def summarize(request: TextRequest):
