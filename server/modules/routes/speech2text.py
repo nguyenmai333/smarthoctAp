@@ -8,7 +8,7 @@ from datetime import datetime
 import pkg_resources
 
 router = APIRouter()
-transcriber = pipeline("automatic-speech-recognition", model=pkg_resources.resource_filename('modules.routes', 'pretrain_models/PhoWhisper-small'))
+transcriber = pipeline("automatic-speech-recognition", model=pkg_resources.resource_filename('modules.pretrain_models', 'PhoWhisper-small'))
 
 
 @router.post("/transcribe/")

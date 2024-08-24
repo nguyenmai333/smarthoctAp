@@ -5,8 +5,8 @@ from modules.services.smart_search_func import re_rank_results
 from transformers import AutoTokenizer, AutoModel
 import pkg_resources
 router = APIRouter()
-tokenizer = AutoTokenizer.from_pretrained(pkg_resources.resource_filename('modules.routes', 'pretrain_models/phobert-base'))
-model = AutoModel.from_pretrained(pkg_resources.resource_filename('modules.routes', 'pretrain_models/phobert-base'))
+tokenizer = AutoTokenizer.from_pretrained(pkg_resources.resource_filename('modules.pretrain_models', 'phobert-base'))
+model = AutoModel.from_pretrained(pkg_resources.resource_filename('modules.pretrain_models', 'phobert-base'))
 
 @router.post("/smart-search/")
 async def smartSearch(query: str, current_user: UserInDB = Depends(get_current_user)):

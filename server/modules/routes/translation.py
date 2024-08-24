@@ -4,8 +4,8 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import pkg_resources
 router = APIRouter()
 
-envit5_tokenizer = AutoTokenizer.from_pretrained(pkg_resources.resource_filename('modules.routes', 'pretrain_models/envit5-translation'))
-envit5_model = AutoModelForSeq2SeqLM.from_pretrained(pkg_resources.resource_filename('modules.routes', 'pretrain_models/envit5-translation'))
+envit5_tokenizer = AutoTokenizer.from_pretrained(pkg_resources.resource_filename('modules.pretrain_models', 'envit5-translation'))
+envit5_model = AutoModelForSeq2SeqLM.from_pretrained(pkg_resources.resource_filename('modules.pretrain_models', 'envit5-translation'))
 
 @router.post("/translate-vi-to-en/")
 async def translate_vi_to_en(request: TextRequest):
