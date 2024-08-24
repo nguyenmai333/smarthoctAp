@@ -2,11 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from modules.core.auth import get_current_user
 from modules.models.user import UserInDB
 from modules.services.smart_search_func import re_rank_results
-from transformers import AutoTokenizer, AutoModel
-import pkg_resources
+from modules.services.loader import phoBert_tokenizer,phoBert_model
 router = APIRouter()
-tokenizer = AutoTokenizer.from_pretrained(pkg_resources.resource_filename('modules.pretrain_models', 'phobert-base'))
-model = AutoModel.from_pretrained(pkg_resources.resource_filename('modules.pretrain_models', 'phobert-base'))
 
 @router.post("/smart-search/")
 async def smartSearch(query: str, current_user: UserInDB = Depends(get_current_user)):
@@ -15,7 +12,7 @@ async def smartSearch(query: str, current_user: UserInDB = Depends(get_current_u
     if not saved_texts:
         raise HTTPException(status_code=404, detail="No saved texts found for the user.")
     
-    reranked_results = re_rank_results(query, saved_texts, tokenizer, model)
+    reranked_results = re_rank_results(query, saved_texts, phoBert_tokenizer, phoBert_model)
     
     top_5_results = reranked_results[:5]
     
