@@ -1,6 +1,6 @@
 import torch
 
-from modules.services.loader import sentence_tokenizer,phoBert_model,phoBert_tokenizer, mbart_tokenizer, mbart_model, mnli_tokenizer, mnli_model, Bert_tokenizer, Bert_model, envit5_tokenizer, envit5_model
+from modules.services.loader import sentence_tokenizer, mbart_tokenizer, mbart_model, Bert_tokenizer, Bert_model, envit5_tokenizer, envit5_model,roberta_tokenizer,roberta_model
 from sklearn.cluster import KMeans
 from collections import defaultdict
 import torch
@@ -45,17 +45,19 @@ def re_rank_results(query, documents, tokenizer, model):
 
 
 def translate_text(text, model, tokenizer):
-    max_input_length = min(512, len(text) + 50) 
-    max_output_length = int(max_input_length * 0.4) 
+    max_input_length = min(len(text),1024)
     inputs = tokenizer.encode(text, return_tensors="pt", max_length=max_input_length, truncation=True)
-    outputs = model.generate(inputs, max_length=max_output_length, num_beams=4, early_stopping=True)
+    outputs = model.generate(inputs, max_length=max_input_length, num_beams=4, early_stopping=True)
     return tokenizer.decode(outputs[0][3:], skip_special_tokens=True)
 
 
 
-def summarize_text(text):
-    inputs = mbart_tokenizer.encode(text, return_tensors="pt", max_length=1024, truncation=True)
-    outputs = mbart_model.generate(inputs, max_length=150, min_length=30, length_penalty=2.0, num_beams=4, early_stopping=True)
+def summarize_text(text, ratio):
+    max_input_length = min(len(text),1024)
+    max_output_length = int(max_input_length * ratio) 
+    min_output_length = min(max_output_length, 5)
+    inputs = mbart_tokenizer.encode(text, return_tensors="pt", max_length=max_input_length, truncation=True)
+    outputs = mbart_model.generate(inputs, max_length=max_output_length, min_length=min_output_length, length_penalty=2.0, num_beams=4, early_stopping=True)
     summary = mbart_tokenizer.decode(outputs[0], skip_special_tokens=True)
     return summary
 
@@ -73,22 +75,19 @@ def translate_paragraphs(paragraphs):
         translated_paragraphs.append(translated_text)
     return translated_paragraphs
 
-labels = ["Math", "Science", "Data", "Computers", "Social", "Physics", "History"] 
-def classify_paragraph(paragraph):
-    inputs = mnli_tokenizer(paragraph, return_tensors="pt", truncation=True, padding=True)
-    with torch.no_grad():
-        outputs = mnli_model(**inputs)
-    logits = outputs.logits
-    probs = F.softmax(logits, dim=1)
-    max_prob, predicted_label_index = torch.max(probs, dim=1)
-    if max_prob.item() < 0.8:
-        return "Other"
-    predicted_label = labels[predicted_label_index.item()]
-    return predicted_label
 
-def classify_paragraphs(paragraphs):
-    topic_assignments = []
-    for paragraph in paragraphs:
-        topic = classify_paragraph(paragraph)
-        topic_assignments.append(topic)
-    return topic_assignments
+
+
+
+def answer_question(question: str, context: str) -> str:
+    inputs = roberta_tokenizer(question, context, add_special_tokens=True, return_tensors='pt')
+    with torch.no_grad():
+        outputs = roberta_model(**inputs)
+    answer_start_scores = outputs.start_logits
+    answer_end_scores = outputs.end_logits
+    answer_start = torch.argmax(answer_start_scores)
+    answer_end = torch.argmax(answer_end_scores) + 1
+    answer_tokens = roberta_tokenizer.convert_ids_to_tokens(inputs['input_ids'][0][answer_start:answer_end])
+    answer = roberta_tokenizer.convert_tokens_to_string(answer_tokens)
+    return answer
+
