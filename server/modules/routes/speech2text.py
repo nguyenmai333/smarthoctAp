@@ -33,7 +33,6 @@ async def transcribe_audio(file: UploadFile = File(...), current_user: UserInDB 
         return {"text": output['text']}
     
     except Exception as e:
-        # Đảm bảo xóa tệp âm thanh tạm thời nếu có lỗi
         if os.path.exists(temp_audio_path):
             os.remove(temp_audio_path)
         raise HTTPException(status_code=500, detail=str(e))

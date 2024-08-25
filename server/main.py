@@ -3,8 +3,8 @@ from modules.routes import user, translation, summarization, smart_search,speech
 import os
 app = FastAPI()
 import sys
+import warnings
 
-# Add the parent directory to sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Include routers
@@ -18,4 +18,5 @@ app.include_router(genQA.router)
 
 if __name__ == "__main__":
     import uvicorn
+    warnings.filterwarnings("ignore")
     uvicorn.run(app, host="0.0.0.0", port=8000)
