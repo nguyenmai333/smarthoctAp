@@ -5,9 +5,9 @@ apt-get install -y git && \
 apt-get clean
 
 # Clone mã nguồn từ GitHub
-RUN git clone https://github.com/nguyenmai333/smarthoctAp.git .
 
-WORKDIR /server
+RUN git clone https://github.com/nguyenmai333/smarthoctAp.git /smarthoctAp
+WORKDIR /smarthoctAp/server
 # Cài đặt các yêu cầu từ requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python -m spacy download en_core_web_sm 
