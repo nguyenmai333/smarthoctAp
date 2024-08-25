@@ -24,7 +24,7 @@ mbart_model = AutoModelForSeq2SeqLM.from_pretrained('facebook/bart-large-cnn',ca
 envit5_tokenizer = AutoTokenizer.from_pretrained('VietAI/envit5-translation',cache_dir=cached_path)
 envit5_model = AutoModelForSeq2SeqLM.from_pretrained('VietAI/envit5-translation',cache_dir=cached_path)
 
-sentence_tokenizer = spacy.load(pkg_resources.resource_filename('modules', 'pretrain_models/en_core_web_sm'))
+sentence_tokenizer = spacy.load('en_core_web_sm')
 
 Bert_tokenizer = AutoTokenizer.from_pretrained('google-bert/bert-base-uncased',cache_dir=cached_path)
 Bert_model = AutoModel.from_pretrained('google-bert/bert-base-uncased',cache_dir=cached_path)
