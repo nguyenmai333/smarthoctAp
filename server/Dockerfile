@@ -7,7 +7,7 @@ apt-get clean
 # Clone mã nguồn từ GitHub
 
 RUN git clone https://github.com/nguyenmai333/smarthoctAp.git /smarthoctAp
-WORKDIR /smarthoctAp/server/pretrain_models
+WORKDIR /smarthoctAp/server/modules/pretrain_models
 RUN git clone  https://huggingface.co/vinai/PhoWhisper-small PhoWhisper-small
 WORKDIR /smarthoctAp/server
 # Cài đặt các yêu cầu từ requirements.txt
