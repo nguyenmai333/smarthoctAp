@@ -8,5 +8,5 @@ fastapi
 pydantic
 uvicorn
 motor
-jose
+python-jose
 easyocr
