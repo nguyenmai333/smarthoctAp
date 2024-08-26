@@ -11,5 +11,12 @@ motor
 python-jose[cryptography]
 easyocr
 passlib
+matplotlib
+nltk
+numpy
+opencv_contrib_python
+opencv_python
+opencv_python_headless
+pymongo
 python-dotenv
 python-multipart
