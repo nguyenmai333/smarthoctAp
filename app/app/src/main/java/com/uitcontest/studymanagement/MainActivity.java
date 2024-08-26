@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -19,26 +16,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.squareup.picasso.Picasso;
 import com.uitcontest.studymanagement.api.ApiClient;
 import com.uitcontest.studymanagement.api.ApiService;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -48,7 +36,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1, CAMERA_REQUEST = 2, SPEECH_REQUEST = 3;
-    private ImageView folderImageView, cameraImageView, microphoneImageView, menuImageView, searchImageView;
+    private ImageView profileImageView, folderImageView, cameraImageView, microphoneImageView, menuImageView, searchImageView;
     private EditText searchText;
     private ApiService service;
 
@@ -62,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Connect to server
         connectServer();
+
+        // Handle profile info
+        handleProfile();
 
         // Handle smart search
         handleSmartSearch();
@@ -78,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
         // Handle upload speech to application
         handleSpeech();
 
+    }
+
+    private void handleProfile() {
+        // Handle click event
+        profileImageView.setOnClickListener(v -> {
+
+        });
     }
 
     private void handleSmartSearch() {
@@ -130,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             Uri imageUri = data.getData();
             if (imageUri != null) {
                 Log.d("SELECTED IMAGE URI", imageUri.toString());
-                Intent intent = new Intent(MainActivity.this, ImageToText.class);
+                Intent intent = new Intent(MainActivity.this, ImageToTextActivity.class);
                 intent.putExtra("imageUri", imageUri.toString());
                 startActivity(intent);
             }
@@ -140,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) Objects.requireNonNull(extras).get("data");
             if (imageBitmap != null) {
                 Log.d("IMAGE BITMAP", imageBitmap.toString());
-                Intent intent = new Intent(MainActivity.this, ImageToText.class);
+                Intent intent = new Intent(MainActivity.this, ImageToTextActivity.class);
                 intent.putExtra("imageBitmap", imageBitmap);
                 startActivity(intent);
             }
@@ -297,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeView() {
+        profileImageView = findViewById(R.id.profileIcon);
         menuImageView = findViewById(R.id.ivMenu);
         searchImageView = findViewById(R.id.ivSearch);
         searchText = findViewById(R.id.etSearch);
