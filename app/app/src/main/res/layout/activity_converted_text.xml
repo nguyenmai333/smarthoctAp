@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    tools:context=".ConvertedTextActivity">
+
+    <TextView
+        android:id="@+id/tvLabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/urbanist_bold"
+        android:text="Converted Text"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <EditText
+        android:id="@+id/etConvertedText"
+        android:layout_width="330dp"
+        android:layout_height="250dp"
+        android:background="@drawable/stroked_rounded_transparent_bg"
+        android:fontFamily="@font/urbanist"
+        android:inputType="textMultiLine"
+        android:padding="10dp"
+        android:scrollbars="vertical"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLabelText"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/summarizeButton"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@drawable/rounded_transparent_bg"
+        android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/urbanist_bold"
+        android:text="@string/summarize"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/mindmapButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mindmapButton"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@drawable/rounded_transparent_bg"
+        android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/urbanist_bold"
+        android:text="@string/mindmap"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/summarizeButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

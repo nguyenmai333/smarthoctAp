@@ -4,23 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.uitcontest.studymanagement.api.ApiClient;
-import com.uitcontest.studymanagement.api.ApiService;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -30,7 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ImageToText extends AppCompatActivity {
+public class ImageToTextActivity extends AppCompatActivity {
 
     private ImageView selectedImage;
     private AppCompatButton convertButton;

@@ -20,7 +20,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ImageToText"
+            android:name=".ConvertedTextActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ImageToTextActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"
