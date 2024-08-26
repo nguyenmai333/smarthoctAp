@@ -21,7 +21,3 @@ pymongo
 dotenv
 python-dotenv
 python-multipart
-sense2vec
-sentence_transformers
-setuptools
-similarity
