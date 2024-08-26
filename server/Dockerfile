@@ -7,11 +7,13 @@ apt-get clean
 # Clone mã nguồn từ GitHub
 
 RUN git clone https://github.com/nguyenmai333/smarthoctAp.git /smarthoctAp
+WORKDIR /smarthoctAp/server/pretrain_models
+RUN git clone  https://huggingface.co/vinai/PhoWhisper-small PhoWhisper-small
 WORKDIR /smarthoctAp/server
 # Cài đặt các yêu cầu từ requirements.txt
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python -m spacy download en_core_web_sm 
-RUN git clone https://huggingface.co/vinai/PhoWhisper-small modules/pretrain_models/PhoWhisper-small
 
 # Chạy ứng dụng chính
 CMD ["python", "main.py"]
