@@ -18,7 +18,9 @@ opencv_contrib_python
 opencv_python
 opencv_python_headless
 pymongo
+dotenv
 python-dotenv
+python-multipart
 sense2vec
 sentence_transformers
 setuptools
