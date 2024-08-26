@@ -1,0 +1,15 @@
+version: '3.8' 
+services:
+  my_app:
+    build: 
+      context: . 
+      dockerfile: Dockerfile 
+    container_name: my_app_container 
+    ports:
+      - "5100:5000" 
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1 
+    command: python main.py 
+
