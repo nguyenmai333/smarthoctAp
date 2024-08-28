@@ -8,9 +8,8 @@ from passlib.context import CryptContext
 import os
 from dotenv import load_dotenv
 load_dotenv()
-
-# Security settings
-SECRET_KEY = os.getenv("SECRET_KEY")
+from config import settings
+SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
 
 
