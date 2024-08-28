@@ -1,9 +1,7 @@
 from pymongo import MongoClient
-from bson.codec_options import CodecOptions
+from config import settings
 
-from bson.binary import UuidRepresentation
-import os
+client = MongoClient(settings.database_url, username=settings.mongo_initdb_root_username, password=settings.mongo_initdb_root_password, uuidRepresentation='standard')
 
-client = MongoClient(os.getenv("DATABASE_URL"), uuidRepresentation='standard')
 db = client.mydatabase
 users_collection = db.users

@@ -20,3 +20,4 @@ opencv_python_headless
 pymongo
 python-dotenv
 python-multipart
+pydantic-settings
