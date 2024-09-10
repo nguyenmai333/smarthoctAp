@@ -3,6 +3,8 @@ FROM python:3.9-slim
 RUN apt-get update && \
 apt-get install -y git && \
 apt-get install git-lfs -y && \
+apt-get install -y libgl1-mesa-glx && \
+apt-get install -y libglib2.0-0 && \
 apt-get clean
 
 RUN git lfs install
