@@ -5,9 +5,9 @@ Hướng dẫn cài docker cho các đấu chiến thắng phật
 ```bash
 cd server (chdir = your_path/smarthoctAp/server)
 
-docker-compose build
+docker-compose run
 ```
 ## Run the Docker Container
 ```bash
-docker-compose run
+docker-compose up
 ```
