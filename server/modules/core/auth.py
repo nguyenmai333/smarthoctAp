@@ -8,9 +8,8 @@ from passlib.context import CryptContext
 import os
 from dotenv import load_dotenv
 load_dotenv()
-
-# Security settings
-SECRET_KEY = os.getenv("SECRET_KEY")
+from config import settings
+SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
 
 
@@ -44,7 +43,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-        user = await users_collection.find_one({"username": username})
+        user = users_collection.find_one({"username": username})
         if user is None:
             raise credentials_exception
         return UserInDB(**user)

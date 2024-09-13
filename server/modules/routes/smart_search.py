@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from modules.core.auth import get_current_user
 from modules.models.user import UserInDB
-from modules.services.smart_search_func import re_rank_results
-from modules.services.loader import phoBert_tokenizer,phoBert_model
+from modules.services.process_func import re_rank_results
+from modules.services.loader import phoBert_tokenizer, phoBert_model
 router = APIRouter()
 
 @router.post("/smart-search/")

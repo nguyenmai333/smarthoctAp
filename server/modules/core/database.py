@@ -1,6 +1,7 @@
-from motor.motor_asyncio import AsyncIOMotorClient
-import os
+from pymongo import MongoClient
+from config import settings
 
-client = AsyncIOMotorClient(os.getenv("DATABASE_URL"))
+client = MongoClient(settings.database_url, username=settings.mongo_initdb_root_username, password=settings.mongo_initdb_root_password, uuidRepresentation='standard')
+
 db = client.mydatabase
 users_collection = db.users

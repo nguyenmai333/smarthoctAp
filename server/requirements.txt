@@ -1,0 +1,23 @@
+torch==2.0.1 --extra-index-url https://download.pytorch.org/whl/cpu
+torchvision==0.15.2 --extra-index-url https://download.pytorch.org/whl/cpu
+torchaudio==2.0.2 --extra-index-url https://download.pytorch.org/whl/cpu
+transformers
+scikit-learn
+spacy
+fastapi
+pydantic
+uvicorn
+motor
+python-jose[cryptography]
+easyocr
+passlib
+matplotlib
+nltk
+numpy
+opencv_contrib_python
+opencv_python
+opencv_python_headless
+pymongo
+python-dotenv
+python-multipart
+pydantic-settings
