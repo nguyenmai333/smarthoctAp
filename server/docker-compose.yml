@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  my_app:
+    build: .
+    image: uit-docker-app
+    container_name: uit-docker-app
+    ports:
+      - "9000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  mongo:
+    image: mongo:latest
+    container_name: uit-mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+
+volumes:
+  mongo_data:

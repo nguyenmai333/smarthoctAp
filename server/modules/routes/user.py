@@ -10,7 +10,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 @router.post("/register/")
 async def register_user(username: str, password: str, email: str, full_name: str):
-    existing_user = await users_collection.find_one({"username": username})
+    existing_user = users_collection.find_one({"username": username})
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already registered")
     hashed_password = get_password_hash(password)
@@ -20,7 +20,7 @@ async def register_user(username: str, password: str, email: str, full_name: str
 
 @router.post("/token")
 async def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = await users_collection.find_one({"username": form_data.username})
+    user =  users_collection.find_one({"username": form_data.username})
     if not user or not verify_password(form_data.password, user["hashed_password"]):
         raise HTTPException(status_code=400, detail="Invalid username or password")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
