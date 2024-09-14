@@ -51,4 +51,6 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation ("com.squareup.picasso:picasso:2.8")
+
+    implementation ("com.airbnb.android:lottie:6.5.2")
 }
