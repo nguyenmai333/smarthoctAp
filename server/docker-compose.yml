@@ -15,12 +15,19 @@ services:
     image: mongo:latest
     container_name: uit-mongo-db
     ports:
-      - "27017:27017"
+      - "27000:27017"
     volumes:
       - mongo_data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+networks:
+  default:
+    driver: bridge                
+    ipam:                         
+      driver: default           
+      config:                       
+        - subnet: 172.26.0.0/16
 
 volumes:
   mongo_data:

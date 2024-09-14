@@ -2,7 +2,8 @@ from pydantic_settings  import BaseSettings
 
 class Settings(BaseSettings):
     secret_key: str
-    database_url: str
+    host: str
+    port: str
     mongo_initdb_root_username: str
     mongo_initdb_root_password: str
 
