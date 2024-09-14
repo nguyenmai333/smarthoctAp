@@ -72,9 +72,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleProfile() {
+        // Dynamically change profile icon
+
         // Handle click event
         profileImageView.setOnClickListener(v -> {
-
+            Intent intent = new Intent(MainActivity.this, ProfileInfoActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -103,7 +106,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleSpeech() {
         // Handle click event
-        microphoneImageView.setOnClickListener(view -> startSpeechToText());
+        microphoneImageView.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SpeechToTextActivity.class);
+            startActivity(intent);
+        });
     }
 
     /*private void handleSummarize() {
@@ -142,12 +148,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("imageBitmap", imageBitmap);
                 startActivity(intent);
             }
-        }
-        else if (requestCode == SPEECH_REQUEST && resultCode == RESULT_OK && data != null) {
-            ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            String spokenText = Objects.requireNonNull(result).get(0);
-            Log.d("SPOKEN TEXT", spokenText);
-            uploadSpeechText(spokenText);
         }
 
     }
@@ -247,40 +247,6 @@ public class MainActivity extends AppCompatActivity {
             return path;
         }
         return null;
-    }
-
-    public void uploadSpeechText(String text) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), text);
-
-        Log.d("uploadSpeechText", "Attempting to upload speech text: " + text);
-        Call<ResponseBody> call = service.uploadText(requestBody.toString());
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Log.d("uploadSpeechText", "Speech text upload successful: " + response.body());
-                } else {
-                    Log.e("uploadSpeechText", "Speech text upload failed with status: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("uploadSpeechText", "Speech text upload failed: " + t.getMessage(), t);
-            }
-        });
-    }
-
-    private void startSpeechToText() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now...");
-
-        try {
-            startActivityForResult(intent, SPEECH_REQUEST);
-        } catch (ActivityNotFoundException a) {
-            Toast.makeText(getApplicationContext(), "Your device doesn't support speech input", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void openGallery() {
