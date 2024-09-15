@@ -15,7 +15,7 @@ async def register_user(username: str, password: str, email: str, full_name: str
         raise HTTPException(status_code=400, detail="Username already registered")
     hashed_password = get_password_hash(password)
     user = UserInDB(username=username, email=email, full_name=full_name, hashed_password=hashed_password)
-    await users_collection.insert_one(user.dict())
+    users_collection.insert_one(user.dict())
     return {"message": "User created successfully"}
 
 @router.post("/token")
