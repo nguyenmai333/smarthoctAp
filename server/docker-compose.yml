@@ -10,6 +10,8 @@ services:
       - .:/app
     environment:
       - PYTHONUNBUFFERED=1
+    networks:
+      - app_network
 
   mongo:
     image: mongo:latest
@@ -21,13 +23,12 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-networks:
-  default:
-    driver: bridge                
-    ipam:                         
-      driver: default           
-      config:                       
-        - subnet: 172.26.0.0/16
+    networks:
+      - app_network
 
 volumes:
   mongo_data:
+
+networks:
+  app_network:
+    driver: bridge
