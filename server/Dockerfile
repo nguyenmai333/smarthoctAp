@@ -19,6 +19,12 @@ WORKDIR /smarthoctAp/server
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python -m spacy download en_core_web_sm 
+RUN pip install -U "huggingface_hub[cli]"
+RUN huggingface-cli download facebook/bart-large-cnn --cache-dir /modules/pretrain_models
+RUN huggingface-cli download deepset/roberta-base-squad2 --cache-dir /modules/pretrain_models
+RUN huggingface-cli download vinai/phobert-base --cache-dir /modules/pretrain_models
+RUN huggingface-cli download VietAI/envit5-translation --cache-dir /modules/pretrain_models
+RUN huggingface-cli download google-bert/bert-base-uncased --cache-dir /modules/pretrain_models
 
 # Chạy ứng dụng chính
 CMD ["python", "main.py"]
