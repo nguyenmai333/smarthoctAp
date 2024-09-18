@@ -5,7 +5,7 @@ from modules.services.process_func import re_rank_results
 from modules.services.loader import phoBert_tokenizer, phoBert_model
 router = APIRouter()
 
-@router.post("/smart-search/")
+@router.get("/smart-search")
 async def smartSearch(query: str, current_user: UserInDB = Depends(get_current_user)):
     saved_texts = [entry.text for entry in current_user.processed_texts]
     
