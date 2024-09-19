@@ -1,3 +1,6 @@
 server/seq2mcq/t5_summary_model.pkl
 server/ocr/uploads
 __pycache__/
+
+#Android Studio
+.idea
