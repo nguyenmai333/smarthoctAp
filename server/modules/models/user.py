@@ -11,7 +11,21 @@ class User(BaseModel):
     username: str
     email: str
     full_name: str
+    sex: str
     hashed_password: str
+
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+    email: str
+    full_name: str
+    sex: str
+
+
+
+
+
 
 class UserInDB(User):
     hashed_password: str

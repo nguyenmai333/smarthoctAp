@@ -24,7 +24,7 @@ async def transcribe_audio(file: UploadFile = File(...), current_user: UserInDB 
         processed_entry = ProcessedText(id=uuid4(), text=output['text'], date=datetime.now())
         current_user.processed_texts.append(processed_entry)
         
-        await users_collection.update_one(
+        users_collection.update_one(
             {"username": current_user.username},
             {"$set": {"processed_texts": [entry.model_dump() for entry in current_user.processed_texts]}}
         )
