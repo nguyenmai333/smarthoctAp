@@ -21,6 +21,36 @@ def cluster_sentences(sentences, n_clusters):
     clustered_paragraphs = [" ".join(clustered_sentences[cluster]) for cluster in sorted(clustered_sentences)]
     return clustered_paragraphs
 
+# def get_embedding(text, tokenizer, model):
+#     inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=512)
+#     with torch.no_grad():
+#         output = model(**inputs)
+#         embedding = output.last_hidden_state.mean(dim=1)
+#     return embedding
+
+# def calculate_similarity(query_embedding, doc_embedding):
+#     return torch.cosine_similarity(query_embedding, doc_embedding).item()
+
+# def re_rank_results(query, documents, tokenizer, model):
+#     query_embedding = get_embedding(query, tokenizer, model)
+#     reranked_docs = []
+#     for doc in documents:
+#         try:
+#             doc_embedding = get_embedding(doc, tokenizer, model)
+#             similarity = calculate_similarity(query_embedding, doc_embedding)
+#             reranked_docs.append((similarity, doc))
+#         except Exception as e:
+#             print(f"Error processing document: {e}")
+#     return sorted(reranked_docs, reverse=True, key=lambda x: x[0])
+
+#########################################################################
+
+def translate_to_english(text, tokenizer, model):
+    inputs = tokenizer.encode(text, return_tensors="pt", max_length=512, truncation=True)
+    translated_outputs = model.generate(inputs, max_length=512)
+    translated_text = tokenizer.decode(translated_outputs[0], skip_special_tokens=True)
+    return translated_text
+
 def get_embedding(text, tokenizer, model):
     inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=512)
     with torch.no_grad():
@@ -32,16 +62,21 @@ def calculate_similarity(query_embedding, doc_embedding):
     return torch.cosine_similarity(query_embedding, doc_embedding).item()
 
 def re_rank_results(query, documents, tokenizer, model):
-    query_embedding = get_embedding(query, tokenizer, model)
+    query_english = translate_to_english(query, envit5_tokenizer, envit5_model)
+    query_embedding = get_embedding(query_english, tokenizer, model)
+    
     reranked_docs = []
     for doc in documents:
         try:
-            doc_embedding = get_embedding(doc, tokenizer, model)
+            doc_english = translate_to_english(doc, envit5_tokenizer, envit5_model)
+            doc_embedding = get_embedding(doc_english, tokenizer, model)
             similarity = calculate_similarity(query_embedding, doc_embedding)
             reranked_docs.append((similarity, doc))
         except Exception as e:
             print(f"Error processing document: {e}")
-    return sorted(reranked_docs, reverse=True, key=lambda x: x[0])
+    
+    return reranked_docs
+#########################################################################
 
 
 def translate_text(text, model, tokenizer):
@@ -90,4 +125,3 @@ def answer_question(question: str, context: str) -> str:
     answer_tokens = roberta_tokenizer.convert_ids_to_tokens(inputs['input_ids'][0][answer_start:answer_end])
     answer = roberta_tokenizer.convert_tokens_to_string(answer_tokens)
     return answer
-
