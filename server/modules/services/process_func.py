@@ -52,7 +52,8 @@ def translate_to_english(text, tokenizer, model):
     return translated_text
 
 def get_embedding(text, tokenizer, model):
-    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=512)
+    max_input_length = min(len(text),1024)
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=max_input_length)
     with torch.no_grad():
         output = model(**inputs)
         embedding = output.last_hidden_state.mean(dim=1)
