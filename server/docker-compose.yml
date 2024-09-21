@@ -11,7 +11,8 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     networks:
-      - app_network
+      - default
+      - zerotier
 
   mongo:
     image: mongo:latest
@@ -24,7 +25,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     networks:
-      - app_network
+      - default
+      - zerotier
 
 volumes:
   mongo_data:
@@ -32,3 +34,12 @@ volumes:
 networks:
   app_network:
     driver: bridge
+
+  zerotier_network:
+    external: true
+    driver_opts:
+      com.docker.network.bridge.name: "zt-subnet" 
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.26.0.0/16
