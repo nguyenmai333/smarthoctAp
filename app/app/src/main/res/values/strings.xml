@@ -20,4 +20,8 @@
     <string name="convert">Convert</string>
     <string name="mindmap">Mindmap</string>
     <string name="summarize">Summarize</string>
+    <string name="fullname">Fullname</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="gender">Gender</string>
 </resources>

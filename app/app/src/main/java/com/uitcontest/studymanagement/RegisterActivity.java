@@ -6,18 +6,35 @@ import androidx.appcompat.widget.AppCompatButton;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.uitcontest.studymanagement.api.ApiClient;
+import com.uitcontest.studymanagement.api.ApiService;
 
+import java.io.IOException;
 import java.util.Objects;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private TextInputEditText usernameEditText, emailEditText, passwordEditText, confirmPasswordEditText;
+    private TextInputEditText usernameEditText, emailEditText, passwordEditText, fullnameEditText;
     private TextView loginNowTextView;
+    private RadioGroup genderRadioGroup;
+    private RadioButton selectedGenderRadioButton;
     private AppCompatButton registerButton;
+    private final ApiService service = ApiClient.getApiService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,46 +54,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Handle click for "Login Now" text
         loginNowTextView.setOnClickListener(v -> handleLoginNow());
-
-        // Handle focus change for username input field
-        usernameEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                handleUsernameFocus();
-            }
-        });
-
-
-        // Handle focus change for email input field
-        emailEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                handleEmailFocus();
-            }
-        });
-
-        // Handle focus change for password input field
-        passwordEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                handlePasswordFocus();
-            }
-        });
-
-        // Handle focus change for confirm password input field
-        confirmPasswordEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                handleConfirmPasswordFocus();
-            }
-        });
-    }
-    private void handleConfirmPasswordFocus() {
-    }
-
-    private void handlePasswordFocus() {
-    }
-
-    private void handleEmailFocus() {
-    }
-
-    private void handleUsernameFocus() {
     }
 
     private void handleLoginNow() {
@@ -87,12 +64,57 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void handleRegister() {
-        String username = Objects.requireNonNull(usernameEditText.getText().toString());
+        String username = Objects.requireNonNull(usernameEditText.getText()).toString();
         String email = Objects.requireNonNull(emailEditText.getText()).toString();
         String password = Objects.requireNonNull(passwordEditText.getText()).toString();
-        String confirmPassword = Objects.requireNonNull(confirmPasswordEditText.getText()).toString();
+        String fullname = Objects.requireNonNull(fullnameEditText.getText().toString());
+        int selectedGenderId = genderRadioGroup.getCheckedRadioButtonId();
 
-        handleLoginNow();
+        if (selectedGenderId == -1) {
+            Toast.makeText(this, "Please select your gender", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Basic validation checks
+        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || fullname.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        selectedGenderRadioButton = findViewById(selectedGenderId);
+        String gender = selectedGenderRadioButton.getText().toString();
+
+        // Create the request model
+        RegisterUserRequest request = new RegisterUserRequest(username, password, email, fullname, gender);
+
+        // Call the register API
+        Call<ResponseBody> call = service.registerUser(request);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                    // Navigate to the login screen or another screen
+                    handleLoginNow();
+                } else {
+
+                    try {
+                        String errorBody = response.errorBody().string();
+                        Log.e("RegisterActivity", "Error response: " + errorBody);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    Toast.makeText(RegisterActivity.this, "Registration Failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(RegisterActivity.this, "An error occurred: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void switchActivity(Context currentContext, Class<?> targetActivity) {
@@ -105,7 +127,8 @@ public class RegisterActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.etRegisterUsernameText);
         emailEditText = findViewById(R.id.etRegisterEmailText);
         passwordEditText = findViewById(R.id.etRegisterPasswordText);
-        confirmPasswordEditText = findViewById(R.id.etRegisterConfirmPasswordText);
+        genderRadioGroup = findViewById(R.id.rgGender);
+        fullnameEditText = findViewById(R.id.etRegisterFullnameText);
         loginNowTextView = findViewById(R.id.tvLoginNow);
         registerButton = findViewById(R.id.registerButton);
     }
