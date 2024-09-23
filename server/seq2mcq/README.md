@@ -8,7 +8,7 @@ To set up the project, follow these steps:
 
 1. **Clone the repository:**
    ```
-   git clone https://github.com/yourusername/question_generation.git
+   git clone https://github.com/moelllerniklas/question_generation.git
     ```
     ```
    cd question_generation
