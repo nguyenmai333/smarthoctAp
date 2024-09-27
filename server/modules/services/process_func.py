@@ -6,6 +6,12 @@ from collections import defaultdict
 import torch
 import torch.nn.functional as F
 
+import numpy as np
+import networkx as nx
+from collections import defaultdict
+from sklearn.cluster import SpectralClustering
+
+
 def extract_key_sentences(text): 
     doc = sentence_tokenizer(text)
     sentences = [sent.text.strip() for sent in doc.sents]
@@ -59,6 +65,8 @@ def get_embedding(text, tokenizer, model):
         embedding = output.last_hidden_state.mean(dim=1)
     return embedding
 
+
+
 def calculate_similarity(query_embedding, doc_embedding):
     return torch.cosine_similarity(query_embedding, doc_embedding).item()
 
@@ -88,21 +96,7 @@ def translate_text(text, model, tokenizer):
 
 
 
-def summarize_text(text, ratio):
-    max_input_length = min(len(text),1024)
-    max_output_length = int(max_input_length * ratio) 
-    min_output_length = min(max_output_length, 5)
-    inputs = mbart_tokenizer.encode(text, return_tensors="pt", max_length=max_input_length, truncation=True)
-    outputs = mbart_model.generate(inputs, max_length=max_output_length, min_length=min_output_length, length_penalty=2.0, num_beams=4, early_stopping=True)
-    summary = mbart_tokenizer.decode(outputs[0], skip_special_tokens=True)
-    return summary
 
-def summarize_paragraphs(paragraphs):
-    summaries = []
-    for paragraph in paragraphs:
-        summary = summarize_text(paragraph)
-        summaries.append(summary)
-    return summaries
 
 def translate_paragraphs(paragraphs):
     translated_paragraphs = []
@@ -126,3 +120,81 @@ def answer_question(question: str, context: str) -> str:
     answer_tokens = roberta_tokenizer.convert_ids_to_tokens(inputs['input_ids'][0][answer_start:answer_end])
     answer = roberta_tokenizer.convert_tokens_to_string(answer_tokens)
     return answer
+
+
+
+def group_sentences_and_matrix(sentences, labels, similarity_matrix):
+    unique_labels = set(labels)
+    
+    # Tách các câu theo nhãn
+    grouped_sentences = defaultdict(list)
+    for sentence, label in zip(sentences, labels):
+        grouped_sentences[label].append(sentence)
+    
+    # Tách ma trận tương đồng theo nhãn
+    sub_matrices = {}
+    for label in unique_labels:
+        indices = [i for i, l in enumerate(labels) if l == label]
+        sub_matrix = similarity_matrix[np.ix_(indices, indices)]
+        sub_matrices[label] = sub_matrix
+    
+    return grouped_sentences, sub_matrices
+
+def spectral_clustering_from_similarity(similarity_matrix, n_clusters):
+    spectral = SpectralClustering(n_clusters=n_clusters, affinity='precomputed', random_state=0)
+    labels = spectral.fit_predict(similarity_matrix)
+    
+    return labels
+def calculate_similarity_matrix(embeddings):
+    embedding_matrix = torch.stack(embeddings).squeeze() 
+    # Tính cosine similarity giữa tất cả các embeddings
+    similarity_matrix = torch.mm(embedding_matrix, embedding_matrix.t())
+    
+    # Chuẩn hóa ma trận tương đồng để có giá trị trong khoảng [0, 1]
+    norms = torch.norm(embedding_matrix, dim=1, keepdim=True)
+    similarity_matrix = similarity_matrix / (norms * norms.t())
+    
+    # Đảm bảo rằng các giá trị trong ma trận tương đồng là hợp lý
+    similarity_matrix = torch.clamp(similarity_matrix, 0, 1)
+    
+    return similarity_matrix.numpy()
+
+def text_rank(similarity_matrix, n_rank):
+    graph = nx.from_numpy_array(similarity_matrix)
+    
+    # Áp dụng thuật toán PageRank trên đồ thị
+    scores = nx.pagerank(graph)
+    
+    # Sắp xếp các câu dựa trên điểm số
+    ranked_sentences = sorted(((score, index) for index, score in scores.items()), reverse=True)
+    return sorted([x[1] for x in ranked_sentences[:n_rank]])
+
+def summarize_text(text, max_length):
+    inputs = mbart_tokenizer([text], return_tensors="pt")
+    summary_ids = mbart_model.generate(inputs["input_ids"], num_beams=2, min_length=0, max_length=max_length)
+    summary =  mbart_tokenizer.batch_decode(summary_ids, skip_special_tokens=True,clean_up_tokenization_spaces=False)[0]
+    return summary
+
+
+def create_node(sentences, similarity_matrix):
+    if sentences:
+        aNode = { "content": str,
+                 "childs": []
+                 }
+        
+        n_sens = len(sentences)
+        if n_sens < 10:
+            content_summarized = summarize_text(" ".join(sentences),100)
+            
+        else:
+            n_cluster = int(n_sens**(1/3))
+            indice = text_rank(similarity_matrix,7)
+            main_sentences =[sentences[i] for i in indice]
+            content_summarized = summarize_text(" ".join(main_sentences),50)
+            labels = spectral_clustering_from_similarity(similarity_matrix,n_cluster)
+            grp_sents, grp_matrixs  = group_sentences_and_matrix(sentences,labels,similarity_matrix) 
+            unique_labels = set(labels)
+            for lb in unique_labels:
+                aNode["childs"].append(create_node(grp_sents[lb],grp_matrixs[lb]))
+        aNode["content"]= translate_text(content_summarized,envit5_model,envit5_tokenizer)
+        return aNode

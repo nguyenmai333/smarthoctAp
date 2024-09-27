@@ -1,7 +1,7 @@
 import warnings
 warnings.filterwarnings("ignore")
 from fastapi import FastAPI
-from modules.routes import image_routes, user, translation, summarization, smart_search,speech2text, genQA
+from modules.routes import image_routes, user, translation, summarization, smart_search,speech2text, genQA,createMindmap
 import os
 app = FastAPI()
 import sys
@@ -16,6 +16,7 @@ app.include_router(smart_search.router)
 app.include_router(speech2text.router)
 app.include_router(genQA.router)
 app.include_router(image_routes.router)
+app.include_router(createMindmap.router)
 
 
 if __name__ == "__main__":
