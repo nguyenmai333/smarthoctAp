@@ -34,7 +34,6 @@ public class RegisterActivity extends AppCompatActivity {
     private RadioGroup genderRadioGroup;
     private RadioButton selectedGenderRadioButton;
     private AppCompatButton registerButton;
-    private final ApiService service = ApiClient.getApiService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
         RegisterUserRequest request = new RegisterUserRequest(username, password, email, fullname, gender);
 
         // Call the register API
-        Call<ResponseBody> call = service.registerUser(request);
+        Call<ResponseBody> call = ApiClient.getApiService().registerUser(request);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

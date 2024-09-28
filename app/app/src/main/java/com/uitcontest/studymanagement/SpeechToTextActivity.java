@@ -51,7 +51,6 @@ public class SpeechToTextActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private Thread recordingThread;
     private boolean isRecording = false;
-    ApiService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +63,6 @@ public class SpeechToTextActivity extends AppCompatActivity {
         // Create a directory for storing recordings (Internal Storage)
         File recordingDir = createInternalDirectory();
         Log.d("Directory", "Recording directory path: " + recordingDir.getPath());
-
-        // Get current api service
-        service = ApiClient.getApiService();
 
         // Disable stop and play button by default
         switchStateButton(stopButton);
@@ -414,7 +410,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
         RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), text);
 
         Log.d("uploadSpeechText", "Attempting to upload speech text: " + text);
-        Call<ResponseBody> call = service.uploadText(requestBody.toString());
+        Call<ResponseBody> call = ApiClient.getApiService().uploadText(requestBody.toString());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

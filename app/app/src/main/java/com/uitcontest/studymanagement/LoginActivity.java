@@ -79,8 +79,6 @@ public class LoginActivity extends AppCompatActivity {
         String username = Objects.requireNonNull(emailEditText.getText()).toString().trim();
         String password = Objects.requireNonNull(passwordEditText.getText()).toString().trim();
 
-        switchActivity(this, MainActivity.class);
-
         // Basic validation checks
         if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please enter username and password", Toast.LENGTH_SHORT).show();
@@ -94,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         String clientSecret = "client_secret";
 
         // Call the login API
-        Call<ResponseBody> call = service.loginUser(grantType, username, password, scope, clientId, clientSecret);
+        Call<ResponseBody> call = ApiClient.getApiService().loginUser(grantType, username, password, scope, clientId, clientSecret);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -104,7 +102,12 @@ public class LoginActivity extends AppCompatActivity {
                         String responseBody = response.body().string();
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                         Log.d("Login", "Response: " + responseBody);
-                        switchActivity(LoginActivity.this, MainActivity.class);
+                        // Store the token
+                        SharedPrefManager.getInstance(LoginActivity.this).saveAuthToken(responseBody);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

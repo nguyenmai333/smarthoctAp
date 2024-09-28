@@ -2,6 +2,10 @@ package com.uitcontest.studymanagement.api;
 
 import android.util.Log;
 
+import com.uitcontest.studymanagement.R;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -12,6 +16,7 @@ public class ApiClient {
     public static Retrofit getClient() {
         if (retrofit == null) {
             Log.d("ApiClient", "Creating new Retrofit instance");
+
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
