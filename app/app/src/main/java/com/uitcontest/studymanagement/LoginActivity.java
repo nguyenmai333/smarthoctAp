@@ -102,6 +102,10 @@ public class LoginActivity extends AppCompatActivity {
                         String responseBody = response.body().string();
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                         Log.d("Login", "Response: " + responseBody);
+                        // Split the responseBody to get token
+                        String[] parts = responseBody.split(",");
+                        String token = parts[0].split(":")[1].replace("\"", "");
+                        Log.d("Login", "Token: " + token);
                         // Store the token
                         SharedPrefManager.getInstance(LoginActivity.this).saveAuthToken(responseBody);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
