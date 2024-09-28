@@ -28,7 +28,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText emailEditText, passwordEditText;
     private TextView forgotPasswordTextView, registerNowTextView;
     private AppCompatButton loginButton;
-    private final ApiService service = ApiClient.getApiService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                         String token = parts[0].split(":")[1].replace("\"", "");
                         Log.d("Login", "Token: " + token);
                         // Store the token
-                        SharedPrefManager.getInstance(LoginActivity.this).saveAuthToken(responseBody);
+                        SharedPrefManager.getInstance(LoginActivity.this).saveAuthToken(token);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);

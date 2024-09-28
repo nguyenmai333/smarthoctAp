@@ -3,6 +3,7 @@ package com.uitcontest.studymanagement;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -98,13 +99,17 @@ public class ImageToTextActivity extends AppCompatActivity {
 
     private void uploadImageToServer(MultipartBody.Part body) {
         Log.d("uploadImage", "Attempting to upload image");
-
-        Call<ResponseBody> call = ApiClient.getApiService().uploadImage(body);
+        String token = SharedPrefManager.getInstance(this).getAuthToken();
+        Log.e("uploadImage", "Token: " + token);
+        Call<ResponseBody> call = ApiClient.getApiService().uploadImage("Bearer " + token, body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Log.d("uploadImage", "Image upload successful: " + response.body());
+                    Intent intent = new Intent(ImageToTextActivity.this, ConvertedTextActivity.class);
+                    intent.putExtra("convertedText", response.body().toString());
+                    startActivity(intent);
                 } else {
                     Log.e("uploadImage", "Image upload failed with status: " + response.code());
                 }

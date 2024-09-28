@@ -18,8 +18,6 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface ApiService {
-    @GET("/users/me")
-    Call<Response> getCurrentUser(@Header("Authorization") String token);
 
     @Multipart
     @POST("/summarize/")
@@ -27,7 +25,10 @@ public interface ApiService {
 
     @Multipart
     @POST("/detect-text")
-    Call<ResponseBody> uploadImage(@Part MultipartBody.Part image);
+    Call<ResponseBody> uploadImage(
+            @Header("Authorization") String token,
+            @Part MultipartBody.Part image
+    );
 
     @POST("/register/")
     Call<ResponseBody> registerUser(@Body RegisterUserRequest request);
