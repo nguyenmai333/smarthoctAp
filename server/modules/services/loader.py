@@ -1,11 +1,7 @@
 import spacy
 import pkg_resources
 from transformers import AutoTokenizer,AutoModel,AutoModelForSeq2SeqLM,pipeline,RobertaForQuestionAnswering,RobertaTokenizer,pipeline
-
-
-
-
-
+from modules.services.seq2mcq_generator import mcq
 
 cached_path = pkg_resources.resource_filename('modules', 'pretrain_models')
 
@@ -28,3 +24,5 @@ sentence_tokenizer = spacy.load('en_core_web_sm')
 
 Bert_tokenizer = AutoTokenizer.from_pretrained('google-bert/bert-base-uncased',cache_dir=cached_path)
 Bert_model = AutoModel.from_pretrained('google-bert/bert-base-uncased',cache_dir=cached_path)
+
+mcq_generator = mcq()

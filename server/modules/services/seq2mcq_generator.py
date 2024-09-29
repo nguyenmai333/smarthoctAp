@@ -1,17 +1,11 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),'question_generation')))
-from question_generation.pipelines import pipeline as qpl
+from question_generation.question_generation.pipelines import pipeline as qpl
 from transformers import pipeline as tpl
 import torch
 import nltk
 from nltk import pos_tag
 from nltk.tokenize import word_tokenize
-
-
-##--init--
-nltk.download('averaged_perceptron_tagger')
-nltk.download('punkt')
 
 class mcq:
     '''
@@ -76,11 +70,3 @@ class mcq:
             })
         return Distractors ###list (if segments have multi sentences so it's can split 2 ,3 .... 100 sentences contain distractors)
 
-if __name__ == "__main__":
-    mcq_generator = mcq()
-    print('generator loaded')
-    samples = [
-    'Neural networks are one of many types of ML algorithms that are used to model complex patterns in data. They are composed of three layers — input layer, hidden layer, and output layer.']
-    for s in samples:
-        result = mcq_generator.distractors(s)
-        print(result)
