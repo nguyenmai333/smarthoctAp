@@ -12,5 +12,6 @@ async def summarize(request: TextRequestSummarize):
     
     translated_text = translate_text(input_text,envit5_model, envit5_tokenizer)
     length_out = (len(input_text)*input_riot)
-    translated_summary_text = summarize_text(translated_text,length_out)
+    summary_text = summarize_text(translated_text,length_out)
+    translated_summary_text = translate_text(summary_text,envit5_model, envit5_tokenizer)
     return {"summary_text": translated_summary_text}
