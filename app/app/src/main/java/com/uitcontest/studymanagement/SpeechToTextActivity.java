@@ -41,20 +41,16 @@ import retrofit2.Response;
 
 public class SpeechToTextActivity extends AppCompatActivity {
 
-    private static ColorStateList PLAY_BUTTON_COLOR_STATE;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String OUTPUT_FILE_PATH;
-    private final float visualizerScalingFactor = 10.0f;
     private ImageView recordButton, playButton, stopButton;
     private AudioVisualizerView audioVisualizerView;
     private TextInputEditText etTitle;
     private AppCompatButton convertButton;
     private AudioRecord audioRecord;
-    private MediaRecorder mediaRecorder;
     private MediaPlayer mediaPlayer;
     private Thread recordingThread;
     private boolean isRecording = false;
-    ApiService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,15 +64,9 @@ public class SpeechToTextActivity extends AppCompatActivity {
         File recordingDir = createInternalDirectory();
         Log.d("Directory", "Recording directory path: " + recordingDir.getPath());
 
-        // Get current api service
-        service = ApiClient.getApiService();
-
         // Disable stop and play button by default
         switchStateButton(stopButton);
         switchStateButton(playButton);
-
-        // Get the current color state of play button
-        PLAY_BUTTON_COLOR_STATE = playButton.getImageTintList();
 
         // Record button click listener
         recordButton.setOnClickListener(v -> requestAudioPermissions());
@@ -284,8 +274,11 @@ public class SpeechToTextActivity extends AppCompatActivity {
         File recordingDir = createInternalDirectory();
         File audioFile = new File(recordingDir, "audio_record_" + System.currentTimeMillis() + ".pcm");
         OUTPUT_FILE_PATH = audioFile.getAbsolutePath();
+        Log.d("OUTPUTFILEPATH startRecording", OUTPUT_FILE_PATH);
 
-        try (FileOutputStream outputStream = new FileOutputStream(audioFile)) {
+        try {
+            FileOutputStream outputStream = new FileOutputStream(audioFile);
+
             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate,
                     AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, audioBufferSize);
 
@@ -294,16 +287,16 @@ public class SpeechToTextActivity extends AppCompatActivity {
             recordingThread = new Thread(() -> {
                 byte[] buffer = new byte[audioBufferSize];
                 while (isRecording) {
-                    int bytesRead = audioRecord.read(buffer, 0, buffer.length);
+                    int read = audioRecord.read(buffer, 0, buffer.length);
 
-                    if (bytesRead > 0) {
-                        // Update visualizer and write audio data to file
-                        float amplitude = calculateAmplitude(buffer, bytesRead);
-                        runOnUiThread(() -> audioVisualizerView.updateVisualizer(amplitude * visualizerScalingFactor));
+                    if (read > 0) {
+                        // Calculate the amplitude from audio data for visualizer
+                        float amplitude = calculateAmplitude(buffer, read);
+                        runOnUiThread(() -> audioVisualizerView.updateVisualizer(amplitude));
 
                         // Write audio data to file
                         try {
-                            outputStream.write(buffer, 0, bytesRead);
+                            outputStream.write(buffer, 0, read);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -320,13 +313,13 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
             recordingThread.start();
             switchStateButton(recordButton);  // Disable record button
-            if (playButton.isEnabled()) switchStateButton(playButton);  // Disable play button only if it's enabled
-            switchStateButton(stopButton);    // Enable stop button
+            if (!stopButton.isEnabled()) switchStateButton(stopButton);    // Enable stop button if it's disabled
 
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Log.e("Recording", "File creation failed", e);
+            Log.e("Recording", "Error while recording audio");
         }
+
     }
 
     private void stopRecording() {
@@ -352,7 +345,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
             File pcmFile = new File(OUTPUT_FILE_PATH);
             if (pcmFile.exists()) {
                 // Define WAV file path
-                String wavFilePath = pcmFile.getParent() + "/" + etTitle.getText() + ".wav";
+                String wavFilePath = pcmFile.getParent() + File.separator + Objects.requireNonNull(etTitle.getText()).toString().trim() + ".wav";
                 convertPcmToWav(OUTPUT_FILE_PATH, wavFilePath, 44100, 1, 16);
 
                 // Update OUTPUT_FILE_PATH
@@ -372,6 +365,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
                 playButton.setImageResource(R.drawable.pause_circle);
 
                 mediaPlayer.setDataSource(audioFilePath);
+                Log.d("OUTPUTFILEPATH playAudio", OUTPUT_FILE_PATH);
                 mediaPlayer.prepare();
                 mediaPlayer.start();
 
@@ -388,16 +382,17 @@ public class SpeechToTextActivity extends AppCompatActivity {
                 Toast.makeText(this, "Error playing audio", Toast.LENGTH_SHORT).show();
             }
         } else {
-            if (mediaPlayer.isPlaying()) {
-                // Change play button when player is playing
-                playButton.setImageResource(R.drawable.play_circle);
-                mediaPlayer.pause();
-            }
-            else {
-                // Change play button when player is paused
-                playButton.setImageResource(R.drawable.pause_circle);
-                mediaPlayer.start();
-            }
+            toggleMediaPlayer();
+        }
+    }
+
+    private void toggleMediaPlayer() {
+        if (mediaPlayer.isPlaying()) {
+            playButton.setImageResource(R.drawable.play_circle);
+            mediaPlayer.pause();
+        } else {
+            playButton.setImageResource(R.drawable.pause_circle);
+            mediaPlayer.start();
         }
     }
 
@@ -415,7 +410,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
         RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), text);
 
         Log.d("uploadSpeechText", "Attempting to upload speech text: " + text);
-        Call<ResponseBody> call = service.uploadText(requestBody.toString());
+        Call<ResponseBody> call = ApiClient.getApiService().uploadText(requestBody.toString());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

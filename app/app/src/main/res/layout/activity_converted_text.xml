@@ -24,6 +24,7 @@
         android:id="@+id/etConvertedText"
         android:layout_width="330dp"
         android:layout_height="250dp"
+        android:textAlignment="textStart"
         android:background="@drawable/stroked_rounded_transparent_bg"
         android:fontFamily="@font/urbanist"
         android:inputType="textMultiLine"
