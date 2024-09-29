@@ -112,12 +112,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*private void handleSummarize() {
+    /*
+    private void handleSummarize() {
         // Handle click event
         summarizeButton.setOnClickListener(v -> {
             openDialog();
         });
-    }*/
+    }
+    */
 
     private void handleUploadImage() {
         // Handle click event

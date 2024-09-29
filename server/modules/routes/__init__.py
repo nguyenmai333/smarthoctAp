@@ -5,4 +5,5 @@ from .smart_search import *
 from .speech2text import *
 from .createMindmap import *
 from .genQA import *
+from .seq2mcq import *
 from .image_routes import *

@@ -3,6 +3,10 @@ from typing import List, Optional
 
 class TextRequest(BaseModel):
     text: str
+
+class TextRequestSummarize(BaseModel):
+    text: str
+    rito: float
 class TextListRequest(BaseModel):
     texts: list
 
