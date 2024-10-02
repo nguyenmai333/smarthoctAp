@@ -1,5 +1,4 @@
 # Installation
-Hướng dẫn cài docker cho các đấu chiến thắng phật
 ## Build the Docker Image
 
 ```bash
