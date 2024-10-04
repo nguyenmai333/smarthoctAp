@@ -5,15 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
-    android:padding="10dp"
-    tools:context=".ImageToTextActivity">
+    tools:context=".MindmapActivity">
 
     <TextView
-        android:id="@+id/tvImg2Text"
+        android:id="@+id/tvMindmap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/urbanist_bold"
-        android:text="Image to Text"
+        android:text="@string/mindmap"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textIsSelectable="false"
@@ -25,35 +24,52 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25" />
 
-    <ImageView
-        android:id="@+id/selectedImage"
-        android:layout_width="300dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/documentList"
+        android:layout_width="360dp"
         android:layout_height="300dp"
-        android:background="@drawable/stroked_transparent_bg"
-        android:scaleType="fitCenter"
-        android:padding="5dp"
-        android:src="@drawable/imagemode"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/stroked_rounded_transparent_bg"
+        android:textAlignment="textStart"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvImg2Text"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintTop_toBottomOf="@id/tvMindmap"
+        app:layout_constraintVertical_bias="0" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/img2txtConvertButton"
-        android:layout_width="250dp"
+        android:id="@+id/addButton"
+        android:layout_width="160dp"
         android:layout_height="60dp"
         android:background="@drawable/rounded_transparent_bg"
         android:backgroundTint="@color/teal_200"
         android:fontFamily="@font/urbanist_bold"
-        android:text="@string/convert"
+        android:text="@string/add"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/createButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/createButton"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@drawable/rounded_transparent_bg"
+        android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/urbanist_bold"
+        android:text="@string/create"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectedImage"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintStart_toEndOf="@+id/addButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
