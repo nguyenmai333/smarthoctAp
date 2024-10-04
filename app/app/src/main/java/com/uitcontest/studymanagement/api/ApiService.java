@@ -1,5 +1,6 @@
 package com.uitcontest.studymanagement.api;
 
+import com.uitcontest.studymanagement.MindmapRequest;
 import com.uitcontest.studymanagement.RegisterUserRequest;
 
 import okhttp3.MultipartBody;
@@ -19,6 +20,7 @@ import retrofit2.http.Path;
 
 public interface ApiService {
 
+    // Define the API endpoints
     @Multipart
     @POST("/summarize/")
     Call<ResponseBody> uploadText(@Part("text") String text);
@@ -43,4 +45,8 @@ public interface ApiService {
             @Field("client_id") String clientId,
             @Field("client_secret") String clientSecret
     );
+    
+    @POST("/create_mindmap/")
+    Call<ResponseBody> createMindmap(@Body MindmapRequest request);
+
 }

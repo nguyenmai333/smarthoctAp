@@ -1,20 +1,15 @@
 package com.uitcontest.studymanagement;
 
-import android.Manifest;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.speech.RecognizerIntent;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -23,22 +18,14 @@ import androidx.core.content.ContextCompat;
 import com.uitcontest.studymanagement.api.ApiClient;
 import com.uitcontest.studymanagement.api.ApiService;
 
-import java.util.ArrayList;
 import java.util.Objects;
-
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1, CAMERA_REQUEST = 2, SPEECH_REQUEST = 3;
+    private static final int PICK_IMAGE_REQUEST = 1, CAMERA_REQUEST = 2;
     private ImageView profileImageView, folderImageView, cameraImageView, microphoneImageView, menuImageView, searchImageView;
     private EditText searchText;
-    private ApiService service;
+    private ApiService service = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Handle capture image
         handleCameraCapture();
-
-        // Handle summarize inputted text (temporarily commented)
-        //handleSummarize();
 
         // Handle upload speech to application
         handleSpeech();
@@ -112,15 +96,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*
-    private void handleSummarize() {
-        // Handle click event
-        summarizeButton.setOnClickListener(v -> {
-            openDialog();
-        });
-    }
-    */
-
     private void handleUploadImage() {
         // Handle click event
         folderImageView.setOnClickListener(view -> {
@@ -140,8 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("imageUri", imageUri.toString());
                 startActivity(intent);
             }
-        }
-        else if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK && data != null) {
+        } else if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK && data != null) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) Objects.requireNonNull(extras).get("data");
             if (imageBitmap != null) {
@@ -152,103 +126,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-    }
-
-    /*private File saveBitmapToFile(Bitmap bitmap) {
-        // Get the external storage directory
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        if (storageDir == null) {
-            return null;
-        }
-
-        // Create a unique file name
-        String fileName = "IMG_" + System.currentTimeMillis() + ".jpg";
-        File imageFile = new File(storageDir, fileName);
-
-        try (FileOutputStream out = new FileOutputStream(imageFile)) {
-            // Compress the bitmap to JPEG format and save to file
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            Log.d("saveBitmapToFile", "Image saved: " + imageFile.getAbsolutePath());
-            return imageFile;
-        } catch (IOException e) {
-            Log.e("saveBitmapToFile", "Error saving image: " + e.getMessage(), e);
-            return null;
-        }
-    }
-*/
-
-    /*private void openDialog() {
-        // Create an EditText to use in the dialog
-        EditText input = new EditText(MainActivity.this);
-        input.setHint("Enter text to summarize");
-
-        // Build the AlertDialog
-        new AlertDialog.Builder(MainActivity.this)
-                .setTitle("Summarize Text")
-                .setMessage("Please enter the text you want to summarize:")
-                .setView(input)
-                .setPositiveButton("Summarize", (dialog, whichButton) -> {
-                    // Get the input text
-                    String textToSummarize = input.getText().toString();
-
-                    // Handle the summarization process here
-                    Log.d("Summarize", "Text to summarize: " + textToSummarize);
-                    uploadText(textToSummarize);
-
-                })
-                .setNegativeButton("Cancel", (dialog, whichButton) -> {
-                    // Handle cancel button
-                    dialog.dismiss();
-                })
-                .show();
-    }*/
-
-    /*private void uploadText(String text) {
-        // Create the request body
-        Call<ResponseBody> call = service.uploadText(text);
-
-        // Make the network request
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        // Get the response body and parse it as needed
-                        String responseBody = response.body().string();
-                        Log.d("Summarize", "Summary response: " + responseBody);
-
-                        // Example: Show the summarized text in a dialog
-                        new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("Summary")
-                                .setMessage(responseBody)
-                                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                                .show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Log.e("Summarize", "Summary request failed with status: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Summarize", "Summary request failed: " + t.getMessage(), t);
-            }
-        });
-    }*/
-
-    private String getPathFromURI(Uri contentUri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            String path = cursor.getString(column_index);
-            cursor.close();
-            return path;
-        }
-        return null;
     }
 
     private void openGallery() {
@@ -272,27 +149,24 @@ public class MainActivity extends AppCompatActivity {
         microphoneImageView = findViewById(R.id.navMic);
     }
 
-    // Check media album permission
-    private void checkAlbumPermission() {
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_MEDIA_IMAGES)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_MEDIA_IMAGES}, PICK_IMAGE_REQUEST);
+    private void checkPermissionAndOpenFeature(String permission, int requestCode, Runnable feature) {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
         } else {
-            openGallery();
+            feature.run();
         }
     }
 
-    // Check camera permission
-    private void checkCameraPermission() {
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST);
+    private void checkAlbumPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            checkPermissionAndOpenFeature(android.Manifest.permission.READ_MEDIA_IMAGES, PICK_IMAGE_REQUEST, this::openGallery);
         } else {
-            openCamera();
+            checkPermissionAndOpenFeature(android.Manifest.permission.READ_EXTERNAL_STORAGE, PICK_IMAGE_REQUEST, this::openGallery);
         }
+    }
+
+    private void checkCameraPermission() {
+        checkPermissionAndOpenFeature(android.Manifest.permission.CAMERA, CAMERA_REQUEST, this::openCamera);
     }
 
 }

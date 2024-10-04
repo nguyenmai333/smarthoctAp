@@ -1,15 +1,15 @@
 package com.uitcontest.studymanagement;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.squareup.picasso.Picasso;
 import com.uitcontest.studymanagement.api.ApiClient;
@@ -18,8 +18,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -105,11 +103,11 @@ public class ImageToTextActivity extends AppCompatActivity {
         Call<ResponseBody> call = ApiClient.getApiService().uploadImage("Bearer " + token, body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Log.d("uploadImage", "Image upload successful: " + response.body());
                     // Get the response content
-                    String convertedText = null;
+                    String convertedText;
                     try {
                         assert response.body() != null;
                         convertedText = response.body().string();
@@ -128,7 +126,7 @@ public class ImageToTextActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Log.e("uploadImage", "Image upload failed: " + t.getMessage(), t);
             }
         });

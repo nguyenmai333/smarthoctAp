@@ -1,19 +1,18 @@
 package com.uitcontest.studymanagement;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.uitcontest.studymanagement.api.ApiClient;
-import com.uitcontest.studymanagement.api.ApiService;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -43,32 +42,17 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setClickListeners() {
         // Handle click for login button
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleLogin();
-            }
-        });
+        loginButton.setOnClickListener(v -> handleLogin());
 
         // Handle click for "Forgot Password" text
-        forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleForgotPassword();
-            }
-        });
+        forgotPasswordTextView.setOnClickListener(v -> handleForgotPassword());
 
         // Handle click for "Register Now" text
-        registerNowTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleRegisterNow();
-            }
-        });
+        registerNowTextView.setOnClickListener(v -> handleRegisterNow());
     }
 
     private void handleRegisterNow() {
-        switchActivity(this, RegisterActivity.class);
+        switchActivity(this);
     }
 
     private void handleForgotPassword() {
@@ -95,9 +79,10 @@ public class LoginActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
+                        assert response.body() != null;
                         String responseBody = response.body().string();
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                         Log.d("Login", "Response: " + responseBody);
@@ -120,15 +105,15 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Toast.makeText(LoginActivity.this, "An error occurred: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
 
-    private void switchActivity(Context currentContext, Class<?> targetActivity) {
-        Intent intent = new Intent(currentContext, targetActivity);
+    private void switchActivity(Context currentContext) {
+        Intent intent = new Intent(currentContext, RegisterActivity.class);
         currentContext.startActivity(intent);
         finish();
     }

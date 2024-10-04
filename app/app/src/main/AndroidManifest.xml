@@ -6,7 +6,7 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -25,6 +25,15 @@
         android:theme="@style/Theme.StudyManagement"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".MindmapViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SummarizeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MindmapActivity"
+            android:exported="false" />
         <activity
             android:name=".SpeechToTextActivity"
             android:exported="false" />
@@ -45,7 +54,7 @@
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
