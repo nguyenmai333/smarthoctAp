@@ -1,4 +1,4 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,24 +6,21 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.squareup.picasso.Picasso;
+import com.uitcontest.studymanagement.views.AudioVisualizerView;
+import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.api.ApiClient;
-import com.uitcontest.studymanagement.api.ApiService;
 
 import java.io.File;
 import java.io.FileInputStream;

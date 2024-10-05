@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
     android:padding="10dp"
-    tools:context=".ImageToTextActivity">
+    tools:context=".activities.ImageToTextActivity">
 
     <TextView
         android:id="@+id/tvImg2Text"

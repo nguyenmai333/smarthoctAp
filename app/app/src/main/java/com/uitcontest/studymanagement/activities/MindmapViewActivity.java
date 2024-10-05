@@ -1,47 +1,18 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.activities;
 
-import android.Manifest;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.Settings;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.uitcontest.studymanagement.R;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-
-import kotlin.text.HexFormat;
-import me.jagar.mindmappingandroidlibrary.Helpers.SaveAs;
-import me.jagar.mindmappingandroidlibrary.Listeners.OnItemClicked;
-import me.jagar.mindmappingandroidlibrary.Views.Connection;
-import me.jagar.mindmappingandroidlibrary.Views.ConnectionTextMessage;
 import me.jagar.mindmappingandroidlibrary.Views.Item;
 import me.jagar.mindmappingandroidlibrary.Views.ItemLocation;
 import me.jagar.mindmappingandroidlibrary.Views.MindMappingView;

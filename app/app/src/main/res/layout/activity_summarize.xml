@@ -4,6 +4,128 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SummarizeActivity">
+    android:background="@drawable/main_background"
+    tools:context=".activities.SummarizeActivity">
+
+    <TextView
+        android:id="@+id/tvLabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/urbanist_bold"
+        android:text="@string/summarizer"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textIsSelectable="false"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <EditText
+        android:id="@+id/etSummarizeText"
+        android:layout_width="330dp"
+        android:layout_height="120dp"
+        android:background="@drawable/stroked_rounded_transparent_bg"
+        android:fontFamily="@font/urbanist"
+        android:inputType="textMultiLine"
+        android:padding="10dp"
+        android:scrollbars="vertical"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLabelText"
+        app:layout_constraintVertical_bias="0.13" />
+
+    <LinearLayout
+        android:id="@+id/llSeekBarLabels"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etSummarizeText"
+        app:layout_constraintVertical_bias="0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/urbanist_bold"
+                android:gravity="center"
+                android:text="Short"
+                android:textSize="18sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/urbanist_bold"
+                android:gravity="center"
+                android:text="Long"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            style="@style/ModernSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:max="100" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/summarizeButton"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@drawable/rounded_transparent_bg"
+        android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/urbanist_bold"
+        android:text="@string/summarize"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llSeekBarLabels"
+        app:layout_constraintVertical_bias=".05" />
+
+    <EditText
+        android:id="@+id/etSummarizedText"
+        android:layout_width="330dp"
+        android:layout_height="120dp"
+        android:background="@drawable/stroked_rounded_transparent_bg"
+        android:fontFamily="@font/urbanist"
+        android:inputType="textMultiLine"
+        android:padding="10dp"
+        android:scrollbars="vertical"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/summarizeButton"
+        app:layout_constraintVertical_bias="0.15" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

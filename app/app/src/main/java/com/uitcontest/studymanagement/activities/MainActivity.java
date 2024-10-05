@@ -1,4 +1,4 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.api.ApiClient;
 import com.uitcontest.studymanagement.api.ApiService;
 

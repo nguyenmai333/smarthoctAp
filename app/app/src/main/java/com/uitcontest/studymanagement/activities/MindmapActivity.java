@@ -1,4 +1,4 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,19 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 
+import com.uitcontest.studymanagement.adapters.DocumentAdapter;
+import com.uitcontest.studymanagement.requests.MindmapRequest;
+import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.api.ApiClient;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;

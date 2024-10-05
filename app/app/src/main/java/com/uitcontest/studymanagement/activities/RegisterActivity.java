@@ -1,4 +1,4 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -7,15 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.uitcontest.studymanagement.R;
+import com.uitcontest.studymanagement.requests.RegisterUserRequest;
 import com.uitcontest.studymanagement.api.ApiClient;
-import com.uitcontest.studymanagement.api.ApiService;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -24,8 +24,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterActivity extends AppCompatActivity {
 

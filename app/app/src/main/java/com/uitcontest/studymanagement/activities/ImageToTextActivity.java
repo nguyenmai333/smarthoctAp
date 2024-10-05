@@ -1,4 +1,4 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.squareup.picasso.Picasso;
+import com.uitcontest.studymanagement.R;
+import com.uitcontest.studymanagement.SharedPrefManager;
 import com.uitcontest.studymanagement.api.ApiClient;
 
 import java.io.ByteArrayOutputStream;
