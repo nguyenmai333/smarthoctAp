@@ -73,15 +73,6 @@ public class SummarizeActivity extends AppCompatActivity {
         seekBar = findViewById(R.id.seekBar);
         summarizeButton = findViewById(R.id.summarizeButton);
 
-        // Set outline for seekbar
-        seekBar.setOutlineProvider(new ViewOutlineProvider() {
-            @Override
-            public void getOutline(View view, Outline outline) {
-                outline.setOval(0, 0, view.getWidth(), view.getHeight());
-            }
-        });
-        seekBar.setClipToOutline(true);
-
         // Set progress for seekbar
         seekBar.setProgress(0);
     }

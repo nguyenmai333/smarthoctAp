@@ -16,7 +16,7 @@ import com.uitcontest.studymanagement.R;
 public class ConvertedTextActivity extends AppCompatActivity {
 
     private EditText convertedText;
-    private AppCompatButton summarizeButton, mindmapButton;
+    private AppCompatButton summarizeButton, mindmapButton, quizButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,17 @@ public class ConvertedTextActivity extends AppCompatActivity {
 
         // Handle mindmap button click
         mindmapButton.setOnClickListener(v -> createMindmap());
+
+        // Handle quiz button click
+        quizButton.setOnClickListener(v -> createQuiz());
+    }
+
+    private void createQuiz() {
+        // Handle create quiz
+        Intent intent = new Intent(this, QuizActivity.class);
+        // Pass the converted text
+        intent.putExtra("convertedText", convertedText.getText().toString());
+        startActivity(intent);
     }
 
     private boolean copyText() {
@@ -79,5 +90,6 @@ public class ConvertedTextActivity extends AppCompatActivity {
         convertedText = findViewById(R.id.etConvertedText);
         summarizeButton = findViewById(R.id.summarizeButton);
         mindmapButton = findViewById(R.id.mindmapButton);
+        quizButton = findViewById(R.id.quizButton);
     }
 }

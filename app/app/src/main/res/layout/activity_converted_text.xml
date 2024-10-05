@@ -27,20 +27,20 @@
     <EditText
         android:id="@+id/etConvertedText"
         android:layout_width="330dp"
-        android:layout_height="250dp"
-        android:textAlignment="textStart"
+        android:layout_height="200dp"
         android:background="@drawable/stroked_rounded_transparent_bg"
         android:fontFamily="@font/urbanist"
         android:inputType="textMultiLine"
         android:padding="10dp"
         android:scrollbars="vertical"
+        android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLabelText"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/summarizeButton"
@@ -54,10 +54,10 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/mindmapButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintTop_toBottomOf="@id/etConvertedText"
+        app:layout_constraintVertical_bias="0.1" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/mindmapButton"
@@ -72,8 +72,25 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/summarizeButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/summarizeButton"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/quizButton"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@drawable/rounded_transparent_bg"
+        android:backgroundTint="@color/teal_200"
+        android:fontFamily="@font/urbanist_bold"
+        android:text="@string/quiz"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mindmapButton"
+        app:layout_constraintVertical_bias="0.2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
