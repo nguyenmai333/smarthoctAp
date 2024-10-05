@@ -101,7 +101,7 @@ public class ImageToTextActivity extends AppCompatActivity {
     private void uploadImageToServer(MultipartBody.Part body) {
         Log.d("uploadImage", "Attempting to upload image");
         String token = SharedPrefManager.getInstance(this).getAuthToken();
-        Log.e("uploadImage", "Token: " + token);
+        Log.d("uploadImage", "Token: " + token);
         Call<ResponseBody> call = ApiClient.getApiService().uploadImage("Bearer " + token, body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -110,6 +110,7 @@ public class ImageToTextActivity extends AppCompatActivity {
                     Log.d("uploadImage", "Image upload successful: " + response.body());
                     // Get the response content
                     String convertedText;
+
                     try {
                         assert response.body() != null;
                         convertedText = response.body().string();

@@ -22,7 +22,7 @@ public interface ApiService {
     Call<ResponseBody> uploadText(@Part("text") String text);
 
     @Multipart
-    @POST("/detect-text")
+    @POST("/detect-text/")
     Call<ResponseBody> uploadImage(
             @Header("Authorization") String token,
             @Part MultipartBody.Part image
@@ -44,5 +44,12 @@ public interface ApiService {
     
     @POST("/create_mindmap/")
     Call<ResponseBody> createMindmap(@Body MindmapRequest request);
+
+    @Multipart
+    @POST("/transcribe/")
+    Call<ResponseBody> transcribeAudio(
+            @Header("Authorization") String token,
+            @Part MultipartBody.Part audio
+    );
 
 }
