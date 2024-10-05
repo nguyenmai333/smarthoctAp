@@ -1,5 +1,6 @@
 package com.uitcontest.studymanagement.activities;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -7,6 +8,7 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -34,9 +36,9 @@ public class MindmapViewActivity extends AppCompatActivity {
         initializeView();
 
         // Retrieve the mindmap data from the previous activity
-        String mindmapDataJson = getIntent().getStringExtra("mindmapData");
+        String mindmapDataJson = getIntent().getStringExtra("mindmap");
         //String mindmapDataJson = "{ \"root\":{ \"content\":\"Gia đình luôn là nguồn hỗ trợ và động viên lớn nhất trong những thời điểm khó khăn. Cha mẹ và anh chị em của tôi đã dành thời gian trò chuyện với tôi, chia sẻ kinh nghiệm của tôi và giúp tôi tìm ra giải pháp hiệu quả.\", \"childs\":[ { \"content\":\"Gia đình là nơi mọi người tìm thấy sự an ủi và hỗ trợ vô điều kiện. Những giờ phút quây quần bên nhau, cùng tiếng cười và những cuộc trò chuyện vui vẻ, tạo ra những kỷ niệm quý giá mà chúng ta trân trọng.\", \"childs\":[ { \"content\":\"Gia đình tôi luôn là nguồn động viên và khích lệ lớn nhất trong những lúc khó khăn. Mỗi gia đình đều có truyền thống và phong tục riêng, và gia đình tôi cũng không ngoại lệ. Sự ủng hộ và tình yêu thương vô điều kiện từ gia đình đã giúp tôi cảm thấy mạnh mẽ và mạnh mẽ hơn để đối mặt với thử thách.\", \"childs\":[] }, { \"content\":\"Gia đình là nơi mọi người tìm thấy sự an ủi và hỗ trợ vô điều kiện. Những bữa ăn này không chỉ là cơ hội để thưởng thức những món ăn ngon mà còn là thời gian để chúng ta chia sẻ những câu chuyện, cảm xúc và trải nghiệm trong tuần.\", \"childs\":[] } ] }, { \"content\":\"Vào cuối tuần, gia đình chúng tôi thường tổ chức các bữa tiệc đoàn tụ, nơi mọi người có thể ngồi lại sau một tuần bận rộn. Các bữa ăn thường được chuẩn bị công phu với các món ăn truyền thống như thịt nướng, kem chua và cơm gà. Một trong những truyền thống yêu thích của chúng tôi là tổ chức tiệc mừng Tết Nguyên đán tại nhà. Nhân dịp này, mọi người trong gia đình đến từ những nơi khác nhau, cùng nhau chuẩn bị các món ăn truyền thống.\", \"childs\":[] } ] } }";
-        Log.d("Mindmap", "Mindmap data: " + mindmapDataJson);
+        Log.d("Mindmap received", "Mindmap data: " + mindmapDataJson);
 
         // Parse the JSON object
         Gson gson = new Gson();
@@ -105,6 +107,9 @@ public class MindmapViewActivity extends AppCompatActivity {
         // Set the text color
         nodeItem.getContent().setTextColor(ContextCompat.getColor(MindmapViewActivity.this, R.color.black));
         nodeItem.getContent().setTextSize(16);
+
+        // Set the text style
+        nodeItem.getContent().setTypeface(nodeItem.getContent().getTypeface(), Typeface.NORMAL);
     }
 
     private void formatStructure(Item rootNodeItem) {
