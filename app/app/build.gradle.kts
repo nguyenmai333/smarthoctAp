@@ -51,7 +51,7 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation ("com.squareup.picasso:picasso:2.8")
-    implementation ("io.github.gautamchibde:audiovisualizer:2.2.5")
+    implementation ("io.github.gautamchibde:audiovisualizer:2.2.7")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
 
     implementation ("com.github.JagarYousef:Mindo:2.0.0")

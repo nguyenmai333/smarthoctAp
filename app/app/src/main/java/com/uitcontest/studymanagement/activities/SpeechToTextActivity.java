@@ -6,6 +6,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.media.AudioFormat;
@@ -17,9 +18,10 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.chibde.visualizer.BarVisualizer;
 import com.google.android.material.textfield.TextInputEditText;
-import com.uitcontest.studymanagement.views.AudioVisualizerView;
 import com.uitcontest.studymanagement.R;
+import com.uitcontest.studymanagement.SharedPrefManager;
 import com.uitcontest.studymanagement.api.ApiClient;
 
 import java.io.File;
@@ -30,6 +32,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -41,12 +44,13 @@ public class SpeechToTextActivity extends AppCompatActivity {
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String OUTPUT_FILE_PATH;
     private ImageView recordButton, playButton, stopButton;
-    private AudioVisualizerView audioVisualizerView;
+    private BarVisualizer barVisualizer;
     private TextInputEditText etTitle;
     private AppCompatButton convertButton;
     private AudioRecord audioRecord;
     private MediaPlayer mediaPlayer;
     private Thread recordingThread;
+    private String title;
     private boolean isRecording = false;
 
     @Override
@@ -75,15 +79,66 @@ public class SpeechToTextActivity extends AppCompatActivity {
         playButton.setOnClickListener(v -> playAudio(OUTPUT_FILE_PATH));
 
         // Convert button click listener
-        convertButton.setOnClickListener(v -> {
-            String title = Objects.requireNonNull(etTitle.getText()).toString();
-            if (title.isEmpty()) {
-                Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Toast.makeText(this, "Converting Speech to Text...", Toast.LENGTH_SHORT).show();
-        });
+        convertButton.setOnClickListener(v -> convertAudio());
 
+    }
+
+    private void convertAudio() {
+        title = Objects.requireNonNull(etTitle.getText()).toString();
+        isTitleValid(title);
+        Toast.makeText(this, "Converting Speech to Text...", Toast.LENGTH_SHORT).show();
+
+        // Create a request body from the audio file (wav)
+        File audioFile = new File(OUTPUT_FILE_PATH);
+        Log.d("OUTPUTFILEPATH convertAudio", OUTPUT_FILE_PATH);
+        Log.d("Audio File", "File name: " + audioFile.getName());
+        RequestBody requestFile = RequestBody.create(MediaType.parse("audio/wav"), audioFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", audioFile.getName(), requestFile);
+
+        uploadSpeechToServer(body);
+    }
+
+    private void uploadSpeechToServer(MultipartBody.Part body) {
+        // Get token
+        String token = SharedPrefManager.getInstance(SpeechToTextActivity.this).getAuthToken();
+        Log.d("Speech to Text", "Token: " + token);
+
+        Log.d("Speech to Text", "Uploading audio to server...");
+        Call<ResponseBody> call = ApiClient.getApiService().transcribeAudio("Bearer " + token, body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("Speech to Text", "Speech upload successful: " + response.body());
+                    // Get the response content
+                    String convertedText;
+
+                    try {
+                        convertedText = response.body().string();
+                        // Remove leading "text" and trailing double quotes
+                        convertedText = convertedText.substring(9, convertedText.length() - 2);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    Toast.makeText(SpeechToTextActivity.this, "Text converted successfully", Toast.LENGTH_SHORT).show();
+                    Log.d("Speech to Text", "Text: " + convertedText);
+                    // Pass the text to the next activity
+                    Intent intent = new Intent(SpeechToTextActivity.this, ConvertedTextActivity.class);
+                    intent.putExtra("convertedText", convertedText);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(SpeechToTextActivity.this, "Error converting audio to text", Toast.LENGTH_SHORT).show();
+                    Log.e("Speech to Text", "Error converting audio to text: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Toast.makeText(SpeechToTextActivity.this, "Error converting audio to text", Toast.LENGTH_SHORT).show();
+                Log.e("Speech to Text", "Error converting audio to text: " + t.getMessage());
+            }
+        });
     }
 
     private File createInternalDirectory() {
@@ -287,10 +342,6 @@ public class SpeechToTextActivity extends AppCompatActivity {
                     int read = audioRecord.read(buffer, 0, buffer.length);
 
                     if (read > 0) {
-                        // Calculate the amplitude from audio data for visualizer
-                        float amplitude = calculateAmplitude(buffer, read);
-                        runOnUiThread(() -> audioVisualizerView.updateVisualizer(amplitude));
-
                         // Write audio data to file
                         try {
                             outputStream.write(buffer, 0, read);
@@ -332,8 +383,9 @@ public class SpeechToTextActivity extends AppCompatActivity {
             if (!playButton.isEnabled()) switchStateButton(playButton);  // Enable play button only if it's disabled
             switchStateButton(recordButton);    // Re-enable record button
 
+            title = Objects.requireNonNull(etTitle.getText()).toString();
             // Check if the title is valid
-            if (!isTitleValid()) {
+            if (!isTitleValid(title)) {
                 return;
             }
 
@@ -341,14 +393,17 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
             File pcmFile = new File(OUTPUT_FILE_PATH);
             if (pcmFile.exists()) {
+                // If duplicated title, add timestamp to the title
+                if (new File(pcmFile.getParent() + File.separator + title + ".pcm").exists()) {
+                    title += "_" + System.currentTimeMillis();
+                }
                 // Define WAV file path
-                String wavFilePath = pcmFile.getParent() + File.separator + Objects.requireNonNull(etTitle.getText()).toString().trim() + ".wav";
+                String wavFilePath = pcmFile.getParent() + File.separator + Objects.requireNonNull(title + ".wav");
                 convertPcmToWav(OUTPUT_FILE_PATH, wavFilePath, 44100, 1, 16);
 
                 // Update OUTPUT_FILE_PATH
                 OUTPUT_FILE_PATH = wavFilePath;
 
-                Toast.makeText(this, "WAV file saved successfully at " + wavFilePath, Toast.LENGTH_LONG).show();
                 Log.d("Recording", "WAV file saved at: " + wavFilePath);
             }
         }
@@ -366,10 +421,14 @@ public class SpeechToTextActivity extends AppCompatActivity {
                 mediaPlayer.prepare();
                 mediaPlayer.start();
 
+                // Set audio visualizer
+                barVisualizer.setPlayer(mediaPlayer.getAudioSessionId());
+
                 mediaPlayer.setOnCompletionListener(mp -> {
                     // Change play button when completed
                     playButton.setImageResource(R.drawable.play_circle);
 
+                    mediaPlayer.reset();
                     mediaPlayer.release();
                     mediaPlayer = null;
                 });
@@ -391,38 +450,6 @@ public class SpeechToTextActivity extends AppCompatActivity {
             playButton.setImageResource(R.drawable.pause_circle);
             mediaPlayer.start();
         }
-    }
-
-    private float calculateAmplitude(byte[] buffer, int read) {
-        // Calculate amplitude (RMS)
-        long sum = 0;
-        for (int i = 0; i < read; i++) {
-            sum += buffer[i] * buffer[i];
-        }
-
-        return (float) Math.sqrt(sum / read);
-    }
-
-    public void uploadSpeechText(String text) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), text);
-
-        Log.d("uploadSpeechText", "Attempting to upload speech text: " + text);
-        Call<ResponseBody> call = ApiClient.getApiService().uploadText(requestBody.toString());
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Log.d("uploadSpeechText", "Speech text upload successful: " + response.body());
-                } else {
-                    Log.e("uploadSpeechText", "Speech text upload failed with status: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("uploadSpeechText", "Speech text upload failed: " + t.getMessage(), t);
-            }
-        });
     }
 
     // Request Audio Recording Permissions
@@ -449,23 +476,24 @@ public class SpeechToTextActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isTitleValid() {
-        String title = Objects.requireNonNull(etTitle.getText()).toString().trim();
-
+    private boolean isTitleValid(String title) {
         if (title.isEmpty()) {
             Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
             return false;
         }
-
         return true;
     }
 
     private void initializeView() {
         etTitle = findViewById(R.id.etAudioFileTitle);
-        audioVisualizerView = findViewById(R.id.audioVisualizerView);
         playButton = findViewById(R.id.playButton);
         recordButton = findViewById(R.id.recordButton);
         stopButton = findViewById(R.id.stopButton);
         convertButton = findViewById(R.id.img2txtConvertButton);
+        barVisualizer = findViewById(R.id.audioVisualizerView);
+
+        // Set visualizer color
+        barVisualizer.setColor(ContextCompat.getColor(this, R.color.purple_200));
+        barVisualizer.setDensity(70);
     }
 }

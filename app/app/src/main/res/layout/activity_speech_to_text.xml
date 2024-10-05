@@ -28,43 +28,43 @@
         android:id="@+id/textInputLayout"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvSpeech2Text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSpeech2Text"
         app:layout_constraintVertical_bias="0.1">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etAudioFileTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="@color/black"
             android:fontFamily="@font/urbanist"
-            android:hint="Enter title" />
+            android:hint="Enter title"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.uitcontest.studymanagement.views.AudioVisualizerView
+    <com.chibde.visualizer.BarVisualizer
         android:id="@+id/audioVisualizerView"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        app:layout_constraintVertical_bias="0.55"
+        android:layout_width="330dp"
+        android:layout_height="150dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        app:layout_constraintVertical_bias="0.1" />
 
     <LinearLayout
         android:id="@+id/recordLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        app:layout_constraintVertical_bias="0.2"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/audioVisualizerView">
+        app:layout_constraintTop_toBottomOf="@+id/audioVisualizerView"
+        app:layout_constraintVertical_bias="0.1">
 
         <ImageView
             android:id="@+id/recordButton"
@@ -93,7 +93,6 @@
             android:src="@drawable/stop_circle"
             app:tint="@color/blue" />
     </LinearLayout>
-
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/img2txtConvertButton"

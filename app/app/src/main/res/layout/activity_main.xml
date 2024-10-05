@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/searchBar"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/undraw_learning_walking" />
+        android:src="@drawable/walking" />
 
     <include layout="@layout/main_bottom_navigation" />
 
