@@ -1,4 +1,4 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.uitcontest.studymanagement.R;
+import com.uitcontest.studymanagement.SharedPrefManager;
 import com.uitcontest.studymanagement.api.ApiClient;
 
 import java.io.IOException;

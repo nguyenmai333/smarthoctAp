@@ -1,4 +1,4 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

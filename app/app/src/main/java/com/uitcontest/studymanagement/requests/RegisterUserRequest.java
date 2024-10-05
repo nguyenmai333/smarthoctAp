@@ -1,4 +1,4 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.requests;
 
 public class RegisterUserRequest {
     private String username;

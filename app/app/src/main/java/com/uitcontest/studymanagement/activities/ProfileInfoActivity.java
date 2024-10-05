@@ -1,8 +1,10 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.uitcontest.studymanagement.R;
 
 public class ProfileInfoActivity extends AppCompatActivity {
 

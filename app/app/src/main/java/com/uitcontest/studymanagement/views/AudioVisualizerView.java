@@ -1,4 +1,4 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,6 +11,8 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+
+import com.uitcontest.studymanagement.R;
 
 public class AudioVisualizerView extends View {
 
@@ -59,11 +61,14 @@ public class AudioVisualizerView extends View {
             return;
         }
 
-        // Shift values to left
-        System.arraycopy(amplitudes, 1, amplitudes, 0, amplitudes.length - 1);
+        // Shift values to left to make space for new amplitude
+        for (int i = 0; i < amplitudes.length - 1; i++) {
+            amplitudes[i] = amplitudes[i + 1];
+        }
 
+        // Add new amplitude to the end of the array
         amplitudes[amplitudes.length - 1] = amplitude;
-        invalidate(); // Redraw the wave
+        invalidate();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.uitcontest.studymanagement;
+package com.uitcontest.studymanagement.models;
 
 public class DocumentModel {
     private String title;
