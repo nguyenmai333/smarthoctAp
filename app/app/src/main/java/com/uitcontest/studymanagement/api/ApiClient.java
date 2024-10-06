@@ -15,13 +15,13 @@ public class ApiClient {
     private static final String BASE_URL = "http://172.26.137.166:8000/docs/";
     private static Retrofit retrofit = null;
 
-    // Create OkHttpClient
+    // OkHttpClient
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .readTimeout(60, TimeUnit.SECONDS)
             .connectTimeout(60, TimeUnit.SECONDS)
             .build();
 
-    // Create Retrofit instance
+    // Retrofit instance
     public static Retrofit getClient() {
         if (retrofit == null) {
             Log.d("ApiClient", "Creating new Retrofit instance");
@@ -39,7 +39,7 @@ public class ApiClient {
         return retrofit;
     }
 
-    // Create ApiService instance
+    // ApiService instance
     public static ApiService getApiService() {
         return getClient().create(ApiService.class);
     }
