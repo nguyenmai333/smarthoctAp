@@ -16,7 +16,6 @@ import retrofit2.http.Part;
 
 public interface ApiService {
 
-    // Define the API endpoints
     @Multipart
     @POST("/summarize/")
     Call<ResponseBody> uploadText(@Part("text") String text);

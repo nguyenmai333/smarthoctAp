@@ -41,9 +41,9 @@ import retrofit2.Response;
 
 public class SpeechToTextActivity extends AppCompatActivity {
 
-    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    private static final int PICK_AUDIO_REQUEST = 100, REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String OUTPUT_FILE_PATH;
-    private ImageView recordButton, playButton, stopButton;
+    private ImageView recordButton, playButton, stopButton, uploadButton;
     private BarVisualizer barVisualizer;
     private TextInputEditText etTitle;
     private AppCompatButton convertButton;
@@ -52,6 +52,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
     private Thread recordingThread;
     private String title;
     private boolean isRecording = false;
+    private boolean alreadyRecorded = false, alreadyUploaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,9 @@ public class SpeechToTextActivity extends AppCompatActivity {
         // Record button click listener
         recordButton.setOnClickListener(v -> requestAudioPermissions());
 
+        // Upload button click listener
+        uploadButton.setOnClickListener(v -> selectAudioFile());
+
         // Stop button click listener
         stopButton.setOnClickListener(v -> stopRecording());
 
@@ -81,6 +85,45 @@ public class SpeechToTextActivity extends AppCompatActivity {
         // Convert button click listener
         convertButton.setOnClickListener(v -> convertAudio());
 
+        // Check if the user has already uploaded or recorded an audio file
+        if (OUTPUT_FILE_PATH != null) {
+            alreadyRecorded = true;
+            switchStateButton(recordButton);
+            if (!stopButton.isEnabled()) switchStateButton(stopButton);
+            if (!playButton.isEnabled()) switchStateButton(playButton);
+
+            if (OUTPUT_FILE_PATH.contains(".wav")) {
+                alreadyUploaded = true;
+                switchStateButton(uploadButton);
+            }
+        }
+
+        // Set state for convert button
+        convertButton.setEnabled(alreadyRecorded || alreadyUploaded);
+    }
+
+    private void selectAudioFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("audio/*");
+        startActivityForResult(intent, PICK_AUDIO_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_AUDIO_REQUEST && resultCode == RESULT_OK && data != null) {
+            // Get the audio file path
+            String audioFilePath = Objects.requireNonNull(data.getData()).getPath();
+            Log.d("Audio File", "File path: " + audioFilePath);
+
+            // Get the audio file name
+            assert audioFilePath != null;
+            String audioFileName = audioFilePath.substring(audioFilePath.lastIndexOf("/") + 1);
+            Log.d("Audio File", "File name: " + audioFileName);
+
+            // Update the output file path
+            OUTPUT_FILE_PATH = audioFilePath;
+        }
     }
 
     private void convertAudio() {
@@ -154,30 +197,6 @@ public class SpeechToTextActivity extends AppCompatActivity {
         }
 
         return internalStorageDir;
-    }
-
-    private File createExternalDirectory() {
-        File externalStorageDir = getExternalFilesDir(null);
-
-        if (externalStorageDir != null) {
-            // Create the "Recordings" directory in the external storage path
-            File recordingsDir = new File(externalStorageDir, "Recordings");
-
-            if (!recordingsDir.exists()) {
-                boolean isCreated = recordingsDir.mkdir();
-                if (isCreated) {
-                    Log.d("Directory", "Directory created: " + recordingsDir.getPath());
-                } else {
-                    Log.e("Directory", "Failed to create directory: " + recordingsDir.getPath());
-                }
-            }
-
-            return recordingsDir;
-        } else {
-            // Handle case if external storage is not available
-            Log.e("Directory", "External storage not available");
-            return null;
-        }
     }
 
     private void switchStateButton(ImageView button) {
@@ -398,7 +417,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
                     title += "_" + System.currentTimeMillis();
                 }
                 // Define WAV file path
-                String wavFilePath = pcmFile.getParent() + File.separator + Objects.requireNonNull(title + ".wav");
+                String wavFilePath = pcmFile.getParent() + File.separator + title + ".wav";
                 convertPcmToWav(OUTPUT_FILE_PATH, wavFilePath, 44100, 1, 16);
 
                 // Update OUTPUT_FILE_PATH
@@ -489,6 +508,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
         playButton = findViewById(R.id.playButton);
         recordButton = findViewById(R.id.recordButton);
         stopButton = findViewById(R.id.stopButton);
+        uploadButton = findViewById(R.id.uploadButton);
         convertButton = findViewById(R.id.img2txtConvertButton);
         barVisualizer = findViewById(R.id.audioVisualizerView);
 
