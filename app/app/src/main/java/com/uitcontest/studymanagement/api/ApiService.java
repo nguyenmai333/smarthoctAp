@@ -2,6 +2,7 @@ package com.uitcontest.studymanagement.api;
 
 import com.uitcontest.studymanagement.requests.MindmapRequest;
 import com.uitcontest.studymanagement.requests.RegisterUserRequest;
+import com.uitcontest.studymanagement.requests.TextRequest;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -15,11 +16,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface ApiService {
-
-    @Multipart
-    @POST("/summarize/")
-    Call<ResponseBody> uploadText(@Part("text") String text);
-
     @Multipart
     @POST("/detect-text/")
     Call<ResponseBody> uploadImage(
@@ -50,5 +46,8 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Part MultipartBody.Part audio
     );
+
+    @POST("/seq2mcq")
+    Call<ResponseBody> generateMCQ(@Body TextRequest request);
 
 }

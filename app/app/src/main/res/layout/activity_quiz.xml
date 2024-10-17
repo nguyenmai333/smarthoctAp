@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <TextView
@@ -29,8 +29,10 @@
             android:id="@+id/questionContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/stroked_white_bg"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:background="@drawable/rounded_transparent_bg"
+            android:backgroundTint="@color/white"
             android:orientation="vertical">
         </LinearLayout>
 
@@ -38,8 +40,8 @@
             android:id="@+id/submitButton"
             android:layout_width="160dp"
             android:layout_height="60dp"
-            android:layout_gravity="center|bottom"
-            android:layout_marginTop="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="70dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/rounded_transparent_bg"
             android:backgroundTint="@color/teal_200"
