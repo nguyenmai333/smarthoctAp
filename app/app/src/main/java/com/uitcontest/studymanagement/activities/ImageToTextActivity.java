@@ -5,7 +5,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +38,7 @@ public class ImageToTextActivity extends AppCompatActivity {
     private AppCompatButton convertButton;
     private Bitmap imageBitmap = null;
     private String imageUriString = null;
+    private FrameLayout progressOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,9 @@ public class ImageToTextActivity extends AppCompatActivity {
     }
 
     private void uploadImageToServer(MultipartBody.Part body) {
+        progressOverlay.setVisibility(ProgressBar.VISIBLE);
+        convertButton.setVisibility(View.GONE);
+
         Log.d("uploadImage", "Attempting to upload image");
         String token = SharedPrefManager.getInstance(this).getAuthToken();
         Log.d("uploadImage", "Token: " + token);
@@ -107,6 +114,8 @@ public class ImageToTextActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
+                    progressOverlay.setVisibility(View.GONE);
+                    convertButton.setVisibility(View.VISIBLE);
                     Log.d("uploadImage", "Image upload successful: " + response.body());
                     // Get the response content
                     String convertedText;
@@ -130,6 +139,8 @@ public class ImageToTextActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                progressOverlay.setVisibility(View.GONE);
+                convertButton.setVisibility(View.VISIBLE);
                 Log.e("uploadImage", "Image upload failed: " + t.getMessage(), t);
             }
         });
@@ -168,5 +179,6 @@ public class ImageToTextActivity extends AppCompatActivity {
     private void initializeView() {
         selectedImage = findViewById(R.id.selectedImage);
         convertButton = findViewById(R.id.img2txtConvertButton);
+        progressOverlay = findViewById(R.id.progressOverlay);
     }
 }
