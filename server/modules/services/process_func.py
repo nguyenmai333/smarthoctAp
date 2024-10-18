@@ -198,3 +198,11 @@ def create_node(sentences, similarity_matrix):
                 aNode["childs"].append(create_node(grp_sents[lb],grp_matrixs[lb]))
         aNode["content"]= translate_text(content_summarized,envit5_model,envit5_tokenizer)
         return aNode
+
+
+
+
+
+
+
+

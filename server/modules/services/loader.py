@@ -1,7 +1,10 @@
 import spacy
 import pkg_resources
+from langchain_groq import ChatGroq
 from transformers import AutoTokenizer,AutoModel,AutoModelForSeq2SeqLM,pipeline,RobertaForQuestionAnswering,RobertaTokenizer,pipeline
-from modules.services.seq2mcq_generator import mcq
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
+
+# from modules.services.seq2mcq_generator import mcq
 
 cached_path = pkg_resources.resource_filename('modules', 'pretrain_models')
 
@@ -25,4 +28,17 @@ sentence_tokenizer = spacy.load('en_core_web_sm')
 Bert_tokenizer = AutoTokenizer.from_pretrained('google-bert/bert-base-uncased',cache_dir=cached_path)
 Bert_model = AutoModel.from_pretrained('google-bert/bert-base-uncased',cache_dir=cached_path)
 
-mcq_generator = mcq()
+# mcq_generator = mcq()
+
+llm = ChatGroq(
+    model="Llama3-8b-8192",
+    api_key="",
+    temperature=0.5,
+    max_tokens=1000,
+    timeout=None,
+    max_retries=2
+)
+
+
+embedding_model = HuggingFaceInferenceAPIEmbeddings(api_key="", model_name = "sentence-transformers/paraphrase-MiniLM-L6-v2")
+
