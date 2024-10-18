@@ -28,7 +28,6 @@ public class SummarizeActivity extends AppCompatActivity {
 
     private EditText summarizeEditText, summarizedEditText;
     private SeekBar seekBar;
-    private TextView seekBarValue;
     private FrameLayout progressOverlay;
     private AppCompatButton summarizeButton;
 
@@ -50,8 +49,7 @@ public class SummarizeActivity extends AppCompatActivity {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // Update the seekbar value
-                seekBarValue.setText("Ratio: " + progress);
+                // Do nothing
             }
 
             @Override
@@ -119,7 +117,6 @@ public class SummarizeActivity extends AppCompatActivity {
         summarizedEditText = findViewById(R.id.etSummarizedText);
         seekBar = findViewById(R.id.seekBar);
         summarizeButton = findViewById(R.id.summarizeButton);
-        seekBarValue = findViewById(R.id.seekBarValueTextView);
         progressOverlay = findViewById(R.id.progressOverlay);
 
         // Make seekbar minimal value to 1

@@ -61,6 +61,8 @@ public class MindmapViewActivity extends AppCompatActivity {
 
         // Format the mind map structure
         formatStructure(rootNodeItem);
+
+        zoomLayout.zoomTo(1.0f, true);
     }
 
 
@@ -129,11 +131,11 @@ public class MindmapViewActivity extends AppCompatActivity {
         rootNodeItem.getBottomChildItems().forEach(childItem -> {
             // Set child to left and right of root alternatively
             if (rootNodeItem.getBottomChildItems().indexOf(childItem) % 2 == 0) {
-                childItem.setX(rootNodeItem.getX() - childItem.getMeasuredWidth() / 3);
+                childItem.setX(rootNodeItem.getX() - childItem.getMeasuredWidth());
             } else {
-                childItem.setX(rootNodeItem.getX() + childItem.getMeasuredWidth() / 5);
+                childItem.setX(rootNodeItem.getX() + childItem.getMeasuredWidth());
             }
-            childItem.setY(rootNodeItem.getY() * 2 + childItem.getMeasuredHeight() * 3 + rootNodeItem.getMeasuredHeight() * 3);
+            childItem.setY(rootNodeItem.getY() * 2 + childItem.getMeasuredHeight() * 5 + rootNodeItem.getMeasuredHeight() * 3);
             if (childItem.getBottomChildItems().size() > 0) {
                 formatStructure(childItem);
             }
