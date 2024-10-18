@@ -32,38 +32,29 @@
 from fastapi import APIRouter,HTTPException
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
-from modules.services.process_func import llm
+from modules.services.loader import llm
 from modules.schemas.user import TextRequest,mcqOb
 
 router = APIRouter()
 
 @router.post("/seq2mcq")
 async def get_seq2mcq(TEXT: TextRequest):
-    
-    try:
         
-        
-        
-        parser = JsonOutputParser(pydantic_object=mcqOb)
+    parser = JsonOutputParser(pydantic_object=mcqOb)
 
-        template = (
-            # "you need translate input to english language"
-            "Use the given content to create list of some vietnamese question with 3 wrong answers and 1 true answer. Answers should not be too long"
-            "Number question depend on length of content"
-            "Dịch sang tiếng việt"
-        )
+    template = (
+        # "you need translate input to english language"
+        "Use the given content to create list of some vietnamese question with 3 wrong answers and 1 true answer. Answers should not be too long"
+        "Number question depend on length of content"
+        "Dịch sang tiếng việt"
+    )
 
-        prompt = PromptTemplate(
-            template=template + "content: {content}\n{format_instructions}",
-            input_variables=["content"],
-            partial_variables={"format_instructions": parser.get_format_instructions()},
-        )
+    prompt = PromptTemplate(
+        template=template + "content: {content}\n{format_instructions}",
+        input_variables=["content"],
+        partial_variables={"format_instructions": parser.get_format_instructions()},
+    )
 
-        chain = prompt | llm | parser
+    chain = prompt | llm | parser
 
-        return chain.invoke({"content":TEXT.text})
-    
-
-    except Exception as e:
-        # Handle specific exceptions or log the error
-        raise HTTPException(status_code=500, detail=str(e))
+    return chain.invoke({"content":TEXT.text})
