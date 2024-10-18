@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.uitcontest.studymanagement.adapters.DocumentAdapter;
+import com.uitcontest.studymanagement.adapters.MindmapNodeAdapter;
 import com.uitcontest.studymanagement.requests.MindmapRequest;
 import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.api.ApiClient;
@@ -30,7 +30,7 @@ public class MindmapActivity extends AppCompatActivity {
     private RecyclerView documentList;
     private AppCompatButton addButton, createButton;
     private List<String> documents = new ArrayList<>();
-    private DocumentAdapter documentAdapter;
+    private MindmapNodeAdapter mindmapNodeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class MindmapActivity extends AppCompatActivity {
         getDocuments();
 
         // Update the adapter
-        documentAdapter.updateDocuments(documents);
+        mindmapNodeAdapter.updateDocuments(documents);
 
         // Handle add button click
         addButton.setOnClickListener(v -> addDocument());
@@ -124,8 +124,8 @@ public class MindmapActivity extends AppCompatActivity {
         createButton = findViewById(R.id.createButton);
 
         // Set up RecyclerView after getting the documents
-        documentAdapter = new DocumentAdapter(this, documents);
+        mindmapNodeAdapter = new MindmapNodeAdapter(this, documents);
         documentList.setLayoutManager(new LinearLayoutManager(this));
-        documentList.setAdapter(documentAdapter);
+        documentList.setAdapter(mindmapNodeAdapter);
     }
 }

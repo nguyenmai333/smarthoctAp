@@ -104,7 +104,6 @@ public class ImageToTextActivity extends AppCompatActivity {
 
     private void uploadImageToServer(MultipartBody.Part body) {
         progressOverlay.setVisibility(ProgressBar.VISIBLE);
-        convertButton.setVisibility(View.GONE);
 
         Log.d("uploadImage", "Attempting to upload image");
         String token = SharedPrefManager.getInstance(this).getAuthToken();
@@ -115,7 +114,6 @@ public class ImageToTextActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     progressOverlay.setVisibility(View.GONE);
-                    convertButton.setVisibility(View.VISIBLE);
                     Log.d("uploadImage", "Image upload successful: " + response.body());
                     // Get the response content
                     String convertedText;
@@ -140,7 +138,6 @@ public class ImageToTextActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 progressOverlay.setVisibility(View.GONE);
-                convertButton.setVisibility(View.VISIBLE);
                 Log.e("uploadImage", "Image upload failed: " + t.getMessage(), t);
             }
         });
