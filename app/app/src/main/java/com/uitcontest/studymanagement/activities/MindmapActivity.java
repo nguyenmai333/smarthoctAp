@@ -81,25 +81,25 @@ public class MindmapActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d("Mindmap", "Mindmap created successfully");
+                    Log.d("MindmapModel", "MindmapModel created successfully");
                     String mindmap = null;
                     try {
                         mindmap = response.body().string();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    Log.d("Mindmap", "Mindmap data: " + mindmap);
+                    Log.d("MindmapModel", "MindmapModel data: " + mindmap);
                     // Navigate to the mindmap view activity
                     Intent intent = new Intent(MindmapActivity.this, MindmapViewActivity.class);
                     // Pass the mindmap response
                     intent.putExtra("mindmap", mindmap);
                     startActivity(intent);
                 } else {
-                    Log.e("Mindmap", "Failed to create mindmap: " + response.code());
+                    Log.e("MindmapModel", "Failed to create mindmap: " + response.code());
                     // Get detail error
                     try {
                         assert response.errorBody() != null;
-                        Log.e("Mindmap", response.errorBody().string());
+                        Log.e("MindmapModel", response.errorBody().string());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -108,7 +108,7 @@ public class MindmapActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
-                Log.e("Mindmap", "Error: " + throwable.getMessage());
+                Log.e("MindmapModel", "Error: " + throwable.getMessage());
             }
         });
 
