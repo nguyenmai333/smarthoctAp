@@ -17,7 +17,7 @@ router = APIRouter()
 async def summarize(request: TextRequestSummarize):
     try:
         input_text = request.text
-        input_riot = request.rito
+        input_riot = request.ratio
         
         # translated_text = translate_text(input_text,envit5_model, envit5_tokenizer)
         # length_out = (len(input_text)*input_riot)
@@ -27,12 +27,12 @@ async def summarize(request: TextRequestSummarize):
         parser = JsonOutputParser(pydantic_object=TestResponse)
 
         template = (
-                "Use the given content to summarize affected by riot."
+                "Use the given content to summarize affected by ratio."
                 "Dịch lại tiếng việt"
             )
 
         prompt = PromptTemplate(
-            template=template + "content: {content}\n rito: {input_riot}/10\n{format_instructions}",
+            template=template + "content: {content}\n ratio: {input_ratio}/10\n{format_instructions}",
             input_variables=["content"],
             partial_variables={"format_instructions": parser.get_format_instructions()},
         )
@@ -41,7 +41,7 @@ async def summarize(request: TextRequestSummarize):
         
         
         return chain.invoke({"content": request.text,
-                             "rito":request.rito
+                             "ratio":request.ratio
                              })
     
         

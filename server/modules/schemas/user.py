@@ -28,11 +28,10 @@ class TestResponse(BaseModel):
     content: str = Field(description="Content after summarizing")
     
 
-class Node(BaseModel):
-    content : List[str] = Field(description="list of contents (level 2), explaining to parent node content")
 class _1thNode(BaseModel):
-    main_content: str = Field(description="Main content level 1")
-    childs : Optional[List[Node]] = Field(description="list of subcontents")
+    main_content: str = Field(description="subtopic of mindmap, concise, comprehensive")
+    childs : Optional[List[str]] = Field(description="list of subcontents, explaining subtopic")
+
 
 
 class Mindmap(BaseModel):
