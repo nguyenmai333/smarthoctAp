@@ -13,11 +13,9 @@ from modules.schemas.user import TestResponse
 router = APIRouter()
 
 
-@router.post("/summarize/")
+@router.post("/summarize/",response_model=TestResponse)
 async def summarize(request: TextRequestSummarize):
     try:
-        input_text = request.text
-        input_riot = request.ratio
         
         # translated_text = translate_text(input_text,envit5_model, envit5_tokenizer)
         # length_out = (len(input_text)*input_riot)

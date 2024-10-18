@@ -14,7 +14,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 
 
-@router.post("/create_mindmap/", response_model=MindMapResponse)
+@router.post("/create_mindmap/", response_model=Mindmap)
 async def create_mindmap(request: TextListRequest):
     try:
         input_texts =  " ".join(request.texts)
