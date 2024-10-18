@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.uitcontest.studymanagement.adapters.DocumentAdapter;
+import com.uitcontest.studymanagement.adapters.MindmapNodeAdapter;
 import com.uitcontest.studymanagement.requests.MindmapRequest;
 import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.api.ApiClient;
@@ -30,7 +30,7 @@ public class MindmapActivity extends AppCompatActivity {
     private RecyclerView documentList;
     private AppCompatButton addButton, createButton;
     private List<String> documents = new ArrayList<>();
-    private DocumentAdapter documentAdapter;
+    private MindmapNodeAdapter mindmapNodeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class MindmapActivity extends AppCompatActivity {
         getDocuments();
 
         // Update the adapter
-        documentAdapter.updateDocuments(documents);
+        mindmapNodeAdapter.updateDocuments(documents);
 
         // Handle add button click
         addButton.setOnClickListener(v -> addDocument());
@@ -81,25 +81,25 @@ public class MindmapActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d("Mindmap", "Mindmap created successfully");
+                    Log.d("MindmapModel", "MindmapModel created successfully");
                     String mindmap = null;
                     try {
                         mindmap = response.body().string();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    Log.d("Mindmap", "Mindmap data: " + mindmap);
+                    Log.d("MindmapModel", "MindmapModel data: " + mindmap);
                     // Navigate to the mindmap view activity
                     Intent intent = new Intent(MindmapActivity.this, MindmapViewActivity.class);
                     // Pass the mindmap response
                     intent.putExtra("mindmap", mindmap);
                     startActivity(intent);
                 } else {
-                    Log.e("Mindmap", "Failed to create mindmap: " + response.code());
+                    Log.e("MindmapModel", "Failed to create mindmap: " + response.code());
                     // Get detail error
                     try {
                         assert response.errorBody() != null;
-                        Log.e("Mindmap", response.errorBody().string());
+                        Log.e("MindmapModel", response.errorBody().string());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -108,7 +108,7 @@ public class MindmapActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
-                Log.e("Mindmap", "Error: " + throwable.getMessage());
+                Log.e("MindmapModel", "Error: " + throwable.getMessage());
             }
         });
 
@@ -124,8 +124,8 @@ public class MindmapActivity extends AppCompatActivity {
         createButton = findViewById(R.id.createButton);
 
         // Set up RecyclerView after getting the documents
-        documentAdapter = new DocumentAdapter(this, documents);
+        mindmapNodeAdapter = new MindmapNodeAdapter(this, documents);
         documentList.setLayoutManager(new LinearLayoutManager(this));
-        documentList.setAdapter(documentAdapter);
+        documentList.setAdapter(mindmapNodeAdapter);
     }
 }

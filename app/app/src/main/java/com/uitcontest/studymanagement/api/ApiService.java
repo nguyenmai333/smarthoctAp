@@ -2,6 +2,7 @@ package com.uitcontest.studymanagement.api;
 
 import com.uitcontest.studymanagement.requests.MindmapRequest;
 import com.uitcontest.studymanagement.requests.RegisterUserRequest;
+import com.uitcontest.studymanagement.requests.SummarizeRequest;
 import com.uitcontest.studymanagement.requests.TextRequest;
 
 import okhttp3.MultipartBody;
@@ -50,4 +51,6 @@ public interface ApiService {
     @POST("/seq2mcq")
     Call<ResponseBody> generateMCQ(@Body TextRequest request);
 
+    @POST("/summarize/")
+    Call<ResponseBody> summarizeText(@Body SummarizeRequest request);
 }

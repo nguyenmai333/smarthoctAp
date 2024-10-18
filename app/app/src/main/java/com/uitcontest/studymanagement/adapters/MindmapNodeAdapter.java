@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.DocumentViewHolder> {
+public class MindmapNodeAdapter extends RecyclerView.Adapter<MindmapNodeAdapter.DocumentViewHolder> {
 
     private List<String> documentList;
     private Context context;
 
-    public DocumentAdapter(Context context, List<String> documentList) {
+    public MindmapNodeAdapter(Context context, List<String> documentList) {
         this.context = context;
         this.documentList = documentList;
     }
