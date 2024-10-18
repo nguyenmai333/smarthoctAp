@@ -17,7 +17,9 @@ public class MCQProcessor {
         try {
             // Parse the JSON response into MCQResponse
             MCQResponse mcqResponse = gson.fromJson(jsonResponse, MCQResponse.class);
+            Log.d("MCQProcessor", "MCQ Response: " + mcqResponse);
             List<MCQResult> mcqResults = mcqResponse.getMcq_result();
+            Log.d("MCQProcessor", "MCQ Results: " + mcqResults.size());
 
             for (int i = 0; i < mcqResults.size(); i++) {
                 MCQResult mcqResult = mcqResults.get(i);
