@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -57,14 +58,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleProfile() {
-        // Dynamically change profile icon
+        // Dynamically change profile icon if needed
 
         // Handle click event
         profileImageView.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ProfileInfoActivity.class);
-            startActivity(intent);
+            // Create a PopupMenu when profile image is clicked
+            PopupMenu popupMenu = new PopupMenu(this, profileImageView);
+            popupMenu.getMenuInflater().inflate(R.drawable.profile_menu, popupMenu.getMenu());
+
+            // Handle menu item clicks
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.action_profile) {
+                    // Handle Profile click
+                    openProfile();
+                    return true;
+                } else if (itemId == R.id.action_signout) {
+                    // Handle Signout click
+                    performSignout();
+                    return true;
+                }
+                return false;
+            });
+
+            // Show the popup menu
+            popupMenu.show();
         });
     }
+
+    private void openProfile() {
+        Intent intent = new Intent(this, ProfileInfoActivity.class);
+        startActivity(intent);
+    }
+
+    private void performSignout() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     private void handleSmartSearch() {
         // Handle click event
