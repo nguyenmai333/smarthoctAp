@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-
     private void handleSmartSearch() {
         // Handle click event
         menuImageView.setOnClickListener(v -> {
@@ -105,7 +104,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         searchImageView.setOnClickListener(v -> {
-
+            String query = searchText.getText().toString();
+            if (!query.isEmpty()) {
+                Intent intent = new Intent(MainActivity.this, SmartSearchActivity.class);
+                intent.putExtra("query", query);
+                startActivity(intent);
+            }
         });
     }
 
