@@ -106,7 +106,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
     }
 
     private void selectAudioFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("audio/*");
         startActivityForResult(intent, PICK_AUDIO_REQUEST);
     }

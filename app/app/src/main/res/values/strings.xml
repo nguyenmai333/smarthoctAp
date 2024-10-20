@@ -34,4 +34,7 @@
     <string name="query">Query</string>
     <string name="smart_search">Smart Search</string>
     <string name="edit">Edit</string>
+    <string name="library">Library</string>
+    <string name="processed_text">Processed Text</string>
+    <string name="date">Date</string>
 </resources>

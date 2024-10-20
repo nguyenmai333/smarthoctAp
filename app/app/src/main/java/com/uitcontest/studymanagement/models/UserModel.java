@@ -1,5 +1,7 @@
 package com.uitcontest.studymanagement.models;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -28,6 +30,12 @@ public class UserModel {
     public static UserModel fromJson(String json) {
         Gson gson = new Gson();
         UserModel userModel = gson.fromJson(json, UserModel.class);
+        Log.d("UserModel Name", "Name: " + userModel.getFullName());
+        Log.d("UserModel Email", "Email: " + userModel.getEmail());
+        Log.d("UserModel Username", "Username: " + userModel.getUsername());
+        Log.d("UserModel Gender", "Gender: " + userModel.getSex());
+        Log.d("UserModel ProcessedTexts", "ProcessedTexts: " + userModel.getProcessedTexts().size());
+        Log.d("UserModel ProcessedTexts Date", "ProcessedTexts Date: " + userModel.getProcessedTexts().get(0).getDate());
         instance = userModel;
         return userModel;
     }
