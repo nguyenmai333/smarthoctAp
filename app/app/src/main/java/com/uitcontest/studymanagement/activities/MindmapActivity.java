@@ -69,6 +69,8 @@ public class MindmapActivity extends AppCompatActivity {
     private void convertTextToList(String prevDoc) {
         // Split the document by "."
         documents = Arrays.asList(prevDoc.split("\\."));
+        // Trim each document
+        documents.replaceAll(String::trim);
     }
 
     private void createMindmap() {
