@@ -27,6 +27,7 @@ import retrofit2.Response;
 
 public class MindmapActivity extends AppCompatActivity {
 
+    private static final int ADD_DOCUMENT_REQUEST_CODE = 1;
     private RecyclerView documentList;
     private AppCompatButton addButton, createButton;
     private List<String> documents = new ArrayList<>();
@@ -53,6 +54,22 @@ public class MindmapActivity extends AppCompatActivity {
         createButton.setOnClickListener(v -> createMindmap());
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_DOCUMENT_REQUEST_CODE && resultCode == RESULT_OK) {
+            // Retrieve the selected document
+            String selectedDocument = data.getStringExtra("selectedDocument");
+            Log.d("Document Before", "Document Size: " + documents.size());
+            if (selectedDocument != null) {
+                // Convert it into List<String>
+                convertTextToList(selectedDocument);
+                Log.d("Document", "Selected Document: " + selectedDocument);
+                Log.d("Document After", "Document Size: " + documents.size());
+                mindmapNodeAdapter.updateDocuments(documents);
+            }
+        }
+    }
     private void getDocuments() {
         // Firstly get the document from the previous intent
         String prevDoc = getIntent().getStringExtra("convertedText");
@@ -62,15 +79,18 @@ public class MindmapActivity extends AppCompatActivity {
             convertTextToList(prevDoc);
             Log.d("Document", "Document: " + documents.toString());
         }
-
-        // TODO: Get the documents from the server
     }
 
     private void convertTextToList(String prevDoc) {
         // Split the document by "."
-        documents = Arrays.asList(prevDoc.split("\\."));
-        // Trim each document
-        documents.replaceAll(String::trim);
+        String[] docs = prevDoc.split("\\.");
+        List<String> newDocuments = new ArrayList<>(Arrays.asList(docs));
+
+        // Trim each document in the new list
+        newDocuments.replaceAll(String::trim);
+
+        // Append the new documents to the existing list
+        documents.addAll(newDocuments);
     }
 
     private void createMindmap() {
@@ -117,7 +137,8 @@ public class MindmapActivity extends AppCompatActivity {
     }
 
     private void addDocument() {
-
+        // Go to the add document activity
+        startActivityForResult(new Intent(MindmapActivity.this, AddDocumentActivity.class), ADD_DOCUMENT_REQUEST_CODE);
     }
 
     private void initializeView() {

@@ -171,8 +171,6 @@ public class ImageToTextActivity extends AppCompatActivity {
 
         // Get the image bitmap from the intent extras
         imageBitmap = getIntent().getParcelableExtra("imageBitmap");
-        assert imageBitmap != null;
-        Log.d("IMAGE BITMAP", imageBitmap.toString());
         if (imageBitmap != null) {
             Log.d("IMAGE BITMAP", imageBitmap.toString());
             selectedImage.setImageBitmap(imageBitmap);

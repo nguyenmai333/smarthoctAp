@@ -39,7 +39,10 @@ public interface ApiService {
             @Field("client_id") String clientId,
             @Field("client_secret") String clientSecret
     );
-    
+
+    @GET("/users/me")
+    Call<ResponseBody> getUserInfo(@Header("Authorization") String token);
+
     @POST("/create_mindmap/")
     Call<ResponseBody> createMindmap(@Body MindmapRequest request);
 

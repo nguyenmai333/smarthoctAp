@@ -42,5 +42,4 @@ public class SharedPrefManager {
         editor.remove(AUTH_TOKEN);
         editor.apply();
     }
-
 }
