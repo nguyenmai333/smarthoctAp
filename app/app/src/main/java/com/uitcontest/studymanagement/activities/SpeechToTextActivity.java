@@ -15,6 +15,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -62,6 +63,8 @@ public class SpeechToTextActivity extends AppCompatActivity {
         // Initialize view
         initializeView();
 
+        uploadButton.setVisibility(View.GONE);
+
         // Create a directory for storing recordings (Internal Storage)
         File recordingDir = createInternalDirectory();
         Log.d("Directory", "Recording directory path: " + recordingDir.getPath());
@@ -99,7 +102,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
         }
 
         // Set state for convert button
-        convertButton.setEnabled(alreadyRecorded || alreadyUploaded);
+        convertButton.setEnabled(alreadyRecorded);
     }
 
     private void selectAudioFile() {
@@ -331,6 +334,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
     }
 
     private void startRecording() {
+        Toast.makeText(this, "Recording...", Toast.LENGTH_SHORT).show();
         isRecording = true;
         int sampleRate = 44100;
         int audioBufferSize = AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_MONO,
@@ -342,10 +346,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
         }
 
         // Create a directory for storing the audio file
-        File recordingDir = createInternalDirectory();
-        File audioFile = new File(recordingDir, "audio_record_" + System.currentTimeMillis() + ".pcm");
-        OUTPUT_FILE_PATH = audioFile.getAbsolutePath();
-        Log.d("OUTPUTFILEPATH startRecording", OUTPUT_FILE_PATH);
+        File audioFile = getFile();
 
         try {
             FileOutputStream outputStream = new FileOutputStream(audioFile);
@@ -389,6 +390,15 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
     }
 
+    @NonNull
+    private File getFile() {
+        File recordingDir = createInternalDirectory();
+        File audioFile = new File(recordingDir, "audio_record_" + System.currentTimeMillis() + ".pcm");
+        OUTPUT_FILE_PATH = audioFile.getAbsolutePath();
+        Log.d("OUTPUTFILEPATH startRecording", OUTPUT_FILE_PATH);
+        return audioFile;
+    }
+
     private void stopRecording() {
         if (audioRecord != null) {
             isRecording = false;
@@ -410,21 +420,28 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
             Toast.makeText(this, "Recording saved successfully", Toast.LENGTH_SHORT).show();
 
-            File pcmFile = new File(OUTPUT_FILE_PATH);
-            if (pcmFile.exists()) {
-                // If duplicated title, add timestamp to the title
-                if (new File(pcmFile.getParent() + File.separator + title + ".pcm").exists()) {
-                    title += "_" + System.currentTimeMillis();
-                }
-                // Define WAV file path
-                String wavFilePath = pcmFile.getParent() + File.separator + title + ".wav";
-                convertPcmToWav(OUTPUT_FILE_PATH, wavFilePath, 44100, 1, 16);
+            // Convert PCM to WAV and save the WAV file
+            saveRecord();
+        }
+    }
 
-                // Update OUTPUT_FILE_PATH
-                OUTPUT_FILE_PATH = wavFilePath;
-
-                Log.d("Recording", "WAV file saved at: " + wavFilePath);
+    private void saveRecord() {
+        File pcmFile = new File(OUTPUT_FILE_PATH);
+        if (pcmFile.exists()) {
+            // If duplicated title, add timestamp to the title
+            if (new File(pcmFile.getParent() + File.separator + title + ".pcm").exists()) {
+                title += "_" + System.currentTimeMillis();
             }
+            // Define WAV file path
+            String wavFilePath = pcmFile.getParent() + File.separator + title + ".wav";
+            convertPcmToWav(OUTPUT_FILE_PATH, wavFilePath, 44100, 1, 16);
+
+            // Update OUTPUT_FILE_PATH
+            OUTPUT_FILE_PATH = wavFilePath;
+
+            alreadyRecorded = true;
+
+            Log.d("Recording", "WAV file saved at: " + wavFilePath);
         }
     }
 
@@ -454,6 +471,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
             } catch (IOException e) {
                 e.printStackTrace();
+                Log.e("Audio Player", "Error playing audio: " + e.getMessage());
                 Toast.makeText(this, "Error playing audio", Toast.LENGTH_SHORT).show();
             }
         } else {

@@ -33,4 +33,5 @@
     <string name="result">Result</string>
     <string name="query">Query</string>
     <string name="smart_search">Smart Search</string>
+    <string name="edit">Edit</string>
 </resources>

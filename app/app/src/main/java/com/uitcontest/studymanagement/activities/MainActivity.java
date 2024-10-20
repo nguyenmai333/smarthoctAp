@@ -1,5 +1,6 @@
 package com.uitcontest.studymanagement.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,22 +13,31 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.gson.Gson;
 import com.uitcontest.studymanagement.R;
+import com.uitcontest.studymanagement.SharedPrefManager;
 import com.uitcontest.studymanagement.api.ApiClient;
 import com.uitcontest.studymanagement.api.ApiService;
+import com.uitcontest.studymanagement.models.UserModel;
 
+import java.util.Arrays;
 import java.util.Objects;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1, CAMERA_REQUEST = 2;
     private ImageView profileImageView, folderImageView, cameraImageView, microphoneImageView, menuImageView, searchImageView;
     private EditText searchText;
-    private ApiService service = null;
+    private UserModel userModel = UserModel.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Connect to server
         connectServer();
+
+        // Get user info
+        getUserInfo();
 
         // Handle profile info
         handleProfile();
@@ -57,9 +70,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void handleProfile() {
-        // Dynamically change profile icon if needed
+    private void getUserInfo() {
+        // Get user info from server
+        String token = SharedPrefManager.getInstance(this).getAuthToken();
+        Call<ResponseBody> call = ApiClient.getApiService().getUserInfo("Bearer " + token);
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        assert response.body() != null;
+                        String responseString = response.body().string();
 
+                        // Parse Json
+                        userModel = UserModel.fromJson(responseString);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Log.e("Error", Objects.requireNonNull(t.getMessage()));
+            }
+        });
+    }
+
+    private void handleProfile() {
         // Handle click event
         profileImageView.setOnClickListener(v -> {
             // Create a PopupMenu when profile image is clicked
@@ -100,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
     private void handleSmartSearch() {
         // Handle click event
         menuImageView.setOnClickListener(v -> {
-
+            Intent intent = new Intent(MainActivity.this, LibraryActivity.class);
+            startActivity(intent);
         });
 
         searchImageView.setOnClickListener(v -> {
@@ -114,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void connectServer() {
-        service = ApiClient.getApiService();
+        ApiService service = ApiClient.getApiService();
         Log.d("Server Status", "Connected!");
     }
 
@@ -162,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
-
     }
 
     private void openGallery() {
