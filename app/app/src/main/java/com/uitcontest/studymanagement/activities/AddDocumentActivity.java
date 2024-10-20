@@ -1,30 +1,33 @@
 package com.uitcontest.studymanagement.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import com.uitcontest.studymanagement.R;
+import com.uitcontest.studymanagement.adapters.AddDocumentAdapter;
 import com.uitcontest.studymanagement.adapters.ProcessedTextAdapter;
 import com.uitcontest.studymanagement.models.ProcessedTextModel;
 import com.uitcontest.studymanagement.models.UserModel;
 
 import java.util.List;
 
-public class LibraryActivity extends AppCompatActivity {
+public class AddDocumentActivity extends AppCompatActivity {
 
-    private RecyclerView rvProcessedText;
+    private RecyclerView rvDocument;
     private List<ProcessedTextModel> processedTextModelList;
-    private ProcessedTextAdapter processedTextAdapter;
+    private AddDocumentAdapter addDocumentAdapter;
+    private AppCompatButton addButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library);
+        setContentView(R.layout.activity_add_document);
 
         // Initialize view
         initializeView();
@@ -33,9 +36,23 @@ public class LibraryActivity extends AppCompatActivity {
         getProcessedText();
 
         // Set adapter
-        processedTextAdapter = new ProcessedTextAdapter(this, processedTextModelList);
-        rvProcessedText.setAdapter(processedTextAdapter);
-        processedTextAdapter.notifyDataSetChanged();
+        addDocumentAdapter = new AddDocumentAdapter(this, processedTextModelList);
+        rvDocument.setAdapter(addDocumentAdapter);
+        addDocumentAdapter.notifyDataSetChanged();
+
+        // Handle add button click
+        addButton.setOnClickListener(v -> addDocument());
+    }
+
+    private void addDocument() {
+        // Pass the selected document content to the previous activity
+        ProcessedTextModel selectedDocument = addDocumentAdapter.getSelectedDocument();
+        if (selectedDocument != null) {
+            Intent intent = new Intent();
+            intent.putExtra("selectedDocument", selectedDocument.getText());
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     private void getProcessedText() {
@@ -48,9 +65,10 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void initializeView() {
-        rvProcessedText = findViewById(R.id.documentRecyclerView);
+        rvDocument = findViewById(R.id.addDocumentRecyclerView);
+        addButton = findViewById(R.id.addDocumentButton);
 
         // Set layout
-        rvProcessedText.setLayoutManager(new LinearLayoutManager(this));
+        rvDocument.setLayoutManager(new LinearLayoutManager(this));
     }
 }

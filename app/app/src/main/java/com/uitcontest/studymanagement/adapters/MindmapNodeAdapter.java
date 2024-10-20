@@ -1,5 +1,6 @@
 package com.uitcontest.studymanagement.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.uitcontest.studymanagement.R;
 
 import java.util.List;
 
@@ -24,13 +27,22 @@ public class MindmapNodeAdapter extends RecyclerView.Adapter<MindmapNodeAdapter.
     @NonNull
     @Override
     public DocumentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.simple_item_view, parent, false);
         return new DocumentViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DocumentViewHolder holder, int position) {
         holder.documentTextView.setText(documentList.get(position));
+
+        holder.itemView.setOnClickListener(v -> {
+            // Show dialog
+            new AlertDialog.Builder(context)
+                    .setTitle("Mindmap Nodes")
+                    .setMessage(documentList.get(position))
+                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                    .show();
+        });
     }
 
     @Override
@@ -48,7 +60,7 @@ public class MindmapNodeAdapter extends RecyclerView.Adapter<MindmapNodeAdapter.
 
         public DocumentViewHolder(@NonNull View itemView) {
             super(itemView);
-            documentTextView = itemView.findViewById(android.R.id.text1);
+            documentTextView = itemView.findViewById(R.id.tvItemText);
         }
     }
 }
