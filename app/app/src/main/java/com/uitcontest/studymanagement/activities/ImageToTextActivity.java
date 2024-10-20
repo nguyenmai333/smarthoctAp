@@ -59,8 +59,13 @@ public class ImageToTextActivity extends AppCompatActivity {
     private void convertImageToText() {
         // Handle click event
         convertButton.setOnClickListener(v -> {
-            uploadImage(imageBitmap);
-            uploadImage(Uri.parse(imageUriString));
+            if (imageBitmap != null) {
+                uploadImage(imageBitmap);
+            } else if (imageUriString != null) {
+                uploadImage(Uri.parse(imageUriString));
+            } else {
+                Log.e("convertImageToText", "Image is null");
+            }
         });
     }
 
@@ -166,12 +171,13 @@ public class ImageToTextActivity extends AppCompatActivity {
 
         // Get the image bitmap from the intent extras
         imageBitmap = getIntent().getParcelableExtra("imageBitmap");
+        assert imageBitmap != null;
+        Log.d("IMAGE BITMAP", imageBitmap.toString());
         if (imageBitmap != null) {
             Log.d("IMAGE BITMAP", imageBitmap.toString());
-            Picasso.get().load(imageBitmap.toString()).placeholder(R.drawable.imagemode).into(selectedImage);
+            selectedImage.setImageBitmap(imageBitmap);
         }
     }
-
 
     private void initializeView() {
         selectedImage = findViewById(R.id.selectedImage);

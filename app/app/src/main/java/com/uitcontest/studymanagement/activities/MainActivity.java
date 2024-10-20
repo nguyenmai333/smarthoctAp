@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         profileImageView.setOnClickListener(v -> {
             // Create a PopupMenu when profile image is clicked
             PopupMenu popupMenu = new PopupMenu(this, profileImageView);
-            popupMenu.getMenuInflater().inflate(R.drawable.profile_menu, popupMenu.getMenu());
+            popupMenu.getMenuInflater().inflate(R.menu.profile_menu, popupMenu.getMenu());
 
             // Handle menu item clicks
             popupMenu.setOnMenuItemClickListener(item -> {
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) Objects.requireNonNull(extras).get("data");
             if (imageBitmap != null) {
-                Log.d("IMAGE BITMAP", imageBitmap.toString());
+                Log.d("IMAGE BITMAP", String.valueOf(imageBitmap));
                 Intent intent = new Intent(MainActivity.this, ImageToTextActivity.class);
                 intent.putExtra("imageBitmap", imageBitmap);
                 startActivity(intent);
