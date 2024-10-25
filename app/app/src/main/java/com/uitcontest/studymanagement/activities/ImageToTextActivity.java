@@ -34,7 +34,7 @@ import retrofit2.Response;
 
 public class ImageToTextActivity extends AppCompatActivity {
 
-    private ImageView selectedImage;
+    private ImageView selectedImage, ivBack;
     private AppCompatButton convertButton;
     private Bitmap imageBitmap = null;
     private String imageUriString = null;
@@ -53,6 +53,9 @@ public class ImageToTextActivity extends AppCompatActivity {
     
         // Handle convert image to text
         convertImageToText();
+
+        // Handle back button
+        ivBack.setOnClickListener(v -> finish());
     
     }
 
@@ -181,5 +184,6 @@ public class ImageToTextActivity extends AppCompatActivity {
         selectedImage = findViewById(R.id.selectedImage);
         convertButton = findViewById(R.id.img2txtConvertButton);
         progressOverlay = findViewById(R.id.progressOverlay);
+        ivBack = findViewById(R.id.ivBack);
     }
 }

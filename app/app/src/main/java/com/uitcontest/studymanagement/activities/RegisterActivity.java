@@ -1,5 +1,6 @@
 package com.uitcontest.studymanagement.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
@@ -30,7 +31,6 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText usernameEditText, emailEditText, passwordEditText, fullnameEditText;
     private TextView loginNowTextView;
     private RadioGroup genderRadioGroup;
-    private RadioButton selectedGenderRadioButton;
     private AppCompatButton registerButton;
 
     @Override
@@ -54,17 +54,14 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void handleLoginNow() {
-        switchActivity(this, LoginActivity.class);
-    }
-
-    private void handleForgotPassword() {
+        switchActivity(this);
     }
 
     private void handleRegister() {
         String username = Objects.requireNonNull(usernameEditText.getText()).toString();
         String email = Objects.requireNonNull(emailEditText.getText()).toString();
         String password = Objects.requireNonNull(passwordEditText.getText()).toString();
-        String fullname = Objects.requireNonNull(fullnameEditText.getText().toString());
+        String fullname = Objects.requireNonNull(Objects.requireNonNull(fullnameEditText.getText()).toString());
         int selectedGenderId = genderRadioGroup.getCheckedRadioButtonId();
 
         if (selectedGenderId == -1) {
@@ -77,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
-        selectedGenderRadioButton = findViewById(selectedGenderId);
+        RadioButton selectedGenderRadioButton = findViewById(selectedGenderId);
         String gender = selectedGenderRadioButton.getText().toString();
 
         // Create the request model
@@ -88,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
                     // Navigate to the login screen or another screen
@@ -96,6 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
 
                     try {
+                        assert response.errorBody() != null;
                         String errorBody = response.errorBody().string();
                         Log.e("RegisterActivity", "Error response: " + errorBody);
                     } catch (IOException e) {
@@ -108,14 +106,14 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Toast.makeText(RegisterActivity.this, "An error occurred: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    private void switchActivity(Context currentContext, Class<?> targetActivity) {
-        Intent intent = new Intent(currentContext, targetActivity);
+    private void switchActivity(Context currentContext) {
+        Intent intent = new Intent(currentContext, LoginActivity.class);
         currentContext.startActivity(intent);
         finish();
     }

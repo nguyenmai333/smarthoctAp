@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.uitcontest.studymanagement.adapters.MindmapNodeAdapter;
 import com.uitcontest.studymanagement.requests.MindmapRequest;
@@ -32,6 +33,7 @@ public class MindmapActivity extends AppCompatActivity {
     private AppCompatButton addButton, createButton;
     private List<String> documents = new ArrayList<>();
     private MindmapNodeAdapter mindmapNodeAdapter;
+    private ImageView ivBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class MindmapActivity extends AppCompatActivity {
 
         // Handle create button click
         createButton.setOnClickListener(v -> createMindmap());
+
+        // Handle back button click
+        ivBack.setOnClickListener(v -> finish());
     }
 
     @Override
@@ -145,6 +150,7 @@ public class MindmapActivity extends AppCompatActivity {
         documentList = findViewById(R.id.documentList);
         addButton = findViewById(R.id.addButton);
         createButton = findViewById(R.id.createButton);
+        ivBack = findViewById(R.id.ivBack);
 
         // Set up RecyclerView after getting the documents
         mindmapNodeAdapter = new MindmapNodeAdapter(this, documents);

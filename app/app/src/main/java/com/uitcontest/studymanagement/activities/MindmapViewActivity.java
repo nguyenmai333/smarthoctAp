@@ -54,7 +54,8 @@ public class MindmapViewActivity extends AppCompatActivity {
         renderMindmap(rootNodeItem, mindmapModel.getChildNodes());
 
         // Set the connection lines color and width
-        String colorHex = "#" + Integer.toHexString(ContextCompat.getColor(this, R.color.teal_200) & 0x00ffffff);
+        String colorHex = "#" + Integer.toHexString(ContextCompat.getColor(this, R.color.purple_200) & 0x00ffffff);
+        mindMappingView.setConnectionArrowSize(10);
         mindMappingView.setConnectionColor(colorHex);
         mindMappingView.setConnectionWidth(10);
         mindMappingView.setConnectionCircRadius(5);

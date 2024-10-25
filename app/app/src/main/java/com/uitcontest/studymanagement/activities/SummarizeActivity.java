@@ -1,24 +1,20 @@
 package com.uitcontest.studymanagement.activities;
 
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import android.graphics.Outline;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewOutlineProvider;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ProgressBar;
-import android.widget.SeekBar;
-import android.widget.TextView;
-
 import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.api.ApiClient;
-import com.uitcontest.studymanagement.api.ApiService;
 import com.uitcontest.studymanagement.requests.SummarizeRequest;
 
 import okhttp3.ResponseBody;
@@ -30,6 +26,7 @@ public class SummarizeActivity extends AppCompatActivity {
     private SeekBar seekBar;
     private FrameLayout progressOverlay;
     private AppCompatButton summarizeButton;
+    private ImageView ivBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,23 +42,8 @@ public class SummarizeActivity extends AppCompatActivity {
         // Handle summarize button click
         summarizeButton.setOnClickListener(v -> summarizeText());
 
-        // Handle seekbar change
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // Do nothing
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // Do nothing
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Do nothing
-            }
-        });
+        // Handle back button click
+        ivBack.setOnClickListener(v -> finish());
     }
 
     private void summarizeText() {
@@ -82,6 +64,7 @@ public class SummarizeActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     try {
                         progressOverlay.setVisibility(ProgressBar.GONE);
+                        assert response.body() != null;
                         String summarizedText = response.body().string();
 
                         // Remove json quotes "{"content":" and "}"
@@ -118,6 +101,7 @@ public class SummarizeActivity extends AppCompatActivity {
         seekBar = findViewById(R.id.seekBar);
         summarizeButton = findViewById(R.id.summarizeButton);
         progressOverlay = findViewById(R.id.progressOverlay);
+        ivBack = findViewById(R.id.ivBack);
 
         // Make seekbar minimal value to 1
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

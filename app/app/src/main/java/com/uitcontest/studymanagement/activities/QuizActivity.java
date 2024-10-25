@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -35,6 +36,7 @@ public class QuizActivity extends AppCompatActivity {
     private LinearLayout questionContainer;
     private String convertedText;
     private List<MCQModel> mcqList;
+    private ImageView ivBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class QuizActivity extends AppCompatActivity {
 
         // Handle submit button click
         submitButton.setOnClickListener(v -> validateAndSubmitAnswers());
+
+        // Handle back button click
+        ivBack.setOnClickListener(v -> finish());
     }
 
     private void getConvertedText() {
@@ -200,5 +205,6 @@ public class QuizActivity extends AppCompatActivity {
     private void initializeView() {
         submitButton = findViewById(R.id.submitButton);
         questionContainer = findViewById(R.id.questionContainer);
+        ivBack = findViewById(R.id.ivBack);
     }
 }

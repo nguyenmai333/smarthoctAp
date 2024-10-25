@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.adapters.AddDocumentAdapter;
@@ -23,6 +24,7 @@ public class AddDocumentActivity extends AppCompatActivity {
     private List<ProcessedTextModel> processedTextModelList;
     private AddDocumentAdapter addDocumentAdapter;
     private AppCompatButton addButton;
+    private ImageView ivBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,9 @@ public class AddDocumentActivity extends AppCompatActivity {
 
         // Handle add button click
         addButton.setOnClickListener(v -> addDocument());
+
+        // Handle back button click
+        ivBack.setOnClickListener(v -> finish());
     }
 
     private void addDocument() {
@@ -67,6 +72,7 @@ public class AddDocumentActivity extends AppCompatActivity {
     private void initializeView() {
         rvDocument = findViewById(R.id.addDocumentRecyclerView);
         addButton = findViewById(R.id.addDocumentButton);
+        ivBack = findViewById(R.id.ivBack);
 
         // Set layout
         rvDocument.setLayoutManager(new LinearLayoutManager(this));

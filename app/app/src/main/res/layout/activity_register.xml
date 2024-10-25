@@ -23,7 +23,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/etRegisterUsernameLayout"
@@ -41,7 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.22">
+        app:layout_constraintVertical_bias="0.32">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etRegisterUsernameText"
@@ -72,7 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.32">
+        app:layout_constraintVertical_bias="0.42">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etRegisterEmailText"
@@ -103,7 +103,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.42">
+        app:layout_constraintVertical_bias="0.52">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etRegisterFullnameText"
@@ -133,7 +133,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.52">
+        app:layout_constraintVertical_bias="0.62">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etRegisterPasswordText"
@@ -155,7 +155,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.62">
+        app:layout_constraintVertical_bias="0.72">
 
         <RadioButton
             android:id="@+id/rbMale"
@@ -186,87 +186,12 @@
         android:textAllCaps="false"
         android:text="@string/register"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rgGender"
         app:layout_constraintVertical_bias="0.1" />
-
-    <LinearLayout
-        android:id="@+id/loginOptionLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/registerButton"
-        app:layout_constraintVertical_bias="0.05">
-
-        <LinearLayout
-            android:layout_width="330dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/dark_gray" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/urbanist_bold"
-                android:text="Or Register with"
-                android:textColor="@color/dark_gray"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/dark_gray" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="330dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/ivFacebookRegister"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/stroked_rounded_transparent_bg"
-                android:contentDescription="Register with Facebook"
-                android:padding="12dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_facebook" />
-
-            <ImageView
-                android:id="@+id/ivGoogleRegister"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/stroked_rounded_transparent_bg"
-                android:contentDescription="Register with Google"
-                android:padding="12dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_google" />
-
-        </LinearLayout>
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="330dp"
@@ -277,7 +202,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginOptionLinearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/registerButton">
 
         <TextView
             android:layout_width="wrap_content"

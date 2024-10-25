@@ -44,7 +44,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
     private static final int PICK_AUDIO_REQUEST = 100, REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String OUTPUT_FILE_PATH;
-    private ImageView recordButton, playButton, stopButton, uploadButton;
+    private ImageView recordButton, playButton, stopButton, uploadButton, ivBack;
     private BarVisualizer barVisualizer;
     private TextInputEditText etTitle;
     private AppCompatButton convertButton;
@@ -52,8 +52,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private Thread recordingThread;
     private String title;
-    private boolean isRecording = false;
-    private boolean alreadyRecorded = false, alreadyUploaded = false;
+    private boolean isRecording = false, alreadyRecorded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +85,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
         playButton.setOnClickListener(v -> playAudio(OUTPUT_FILE_PATH));
 
         // Convert button click listener
+        convertButton.setEnabled(true);
         convertButton.setOnClickListener(v -> convertAudio());
 
         // Check if the user has already uploaded or recorded an audio file
@@ -96,13 +96,13 @@ public class SpeechToTextActivity extends AppCompatActivity {
             if (!playButton.isEnabled()) switchStateButton(playButton);
 
             if (OUTPUT_FILE_PATH.contains(".wav")) {
-                alreadyUploaded = true;
-                switchStateButton(uploadButton);
+                if (!uploadButton.isEnabled()) switchStateButton(uploadButton);
             }
         }
 
-        // Set state for convert button
-        convertButton.setEnabled(alreadyRecorded);
+        // Back button click listener
+        ivBack.setOnClickListener(v -> finish());
+
     }
 
     private void selectAudioFile() {
@@ -130,6 +130,11 @@ public class SpeechToTextActivity extends AppCompatActivity {
     }
 
     private void convertAudio() {
+        // Check if null or empty
+        if (OUTPUT_FILE_PATH == null || OUTPUT_FILE_PATH.isEmpty()) {
+            Toast.makeText(this, "Please record or upload an audio file", Toast.LENGTH_SHORT).show();
+            return;
+        }
         title = Objects.requireNonNull(etTitle.getText()).toString();
         isTitleValid(title);
         Toast.makeText(this, "Converting Speech to Text...", Toast.LENGTH_SHORT).show();
@@ -529,6 +534,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
         uploadButton = findViewById(R.id.uploadButton);
         convertButton = findViewById(R.id.img2txtConvertButton);
         barVisualizer = findViewById(R.id.audioVisualizerView);
+        ivBack = findViewById(R.id.ivBack);
 
         // Set visualizer color
         barVisualizer.setColor(ContextCompat.getColor(this, R.color.purple_200));

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class SmartSearchActivity extends AppCompatActivity {
     private TextView queryTextView, resultTextView;
     private FrameLayout frameLayout;
     private ProgressBar progressBar;
+    private ImageView ivBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,9 @@ public class SmartSearchActivity extends AppCompatActivity {
 
         // Handle smart search
         handleSmartSearch(query);
+
+        // Handle back button
+        ivBack.setOnClickListener(v -> finish());
     }
 
     private void handleSmartSearch(String query) {
@@ -126,5 +131,6 @@ public class SmartSearchActivity extends AppCompatActivity {
         resultTextView = findViewById(R.id.tvResult);
         frameLayout = findViewById(R.id.smartSearchLayout);
         progressBar = findViewById(R.id.progressBar);
+        ivBack = findViewById(R.id.ivBack);
     }
 }

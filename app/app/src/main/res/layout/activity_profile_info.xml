@@ -8,6 +8,19 @@
     tools:context=".activities.ProfileInfoActivity">
 
     <ImageView
+        android:id="@+id/ivBack"
+        android:src="@drawable/arrow_back"
+        app:tint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.05"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+    <ImageView
         android:id="@+id/ivProfileAvatar"
         android:layout_width="250dp"
         android:layout_height="250dp"
@@ -19,7 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintVertical_bias="0.1" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/etProfileNameLayout"
@@ -35,7 +48,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivProfileAvatar"
-        app:layout_constraintVertical_bias="0.1">
+        app:layout_constraintVertical_bias="0.05">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etProfileNameText"
