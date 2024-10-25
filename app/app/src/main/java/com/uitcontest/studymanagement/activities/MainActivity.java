@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -186,10 +187,26 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
             if (imageUri != null) {
-                Log.d("SELECTED IMAGE URI", imageUri.toString());
-                Intent intent = new Intent(MainActivity.this, ImageToTextActivity.class);
-                intent.putExtra("imageUri", imageUri.toString());
-                startActivity(intent);
+                // Check if the file size is within 50 MB limit
+                try {
+                    long fileSizeInBytes = Objects.requireNonNull(getContentResolver().openAssetFileDescriptor(imageUri, "r")).getLength();
+                    long fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+
+                    if (fileSizeInMB > 50) {
+                        // Show an error message if file size exceeds 50 MB
+                        Log.e("ERROR", "Selected image exceeds 50 MB limit.");
+                        Toast.makeText(this, "Selected image exceeds 50 MB. Please select a smaller image.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    Log.d("FILE SIZE", "File size: " + fileSizeInMB + " MB");
+                    Log.d("SELECTED IMAGE URI", imageUri.toString());
+                    Intent intent = new Intent(MainActivity.this, ImageToTextActivity.class);
+                    intent.putExtra("imageUri", imageUri.toString());
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } else if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK && data != null) {
             Bundle extras = data.getExtras();

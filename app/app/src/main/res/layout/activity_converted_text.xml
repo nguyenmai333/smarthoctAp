@@ -35,13 +35,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <EditText
         android:id="@+id/etConvertedText"
         android:layout_width="330dp"
         android:layout_height="200dp"
-        android:background="@drawable/stroked_rounded_transparent_bg"
+        android:background="@drawable/stroked_rounded_white_bg"
         android:fontFamily="@font/urbanist"
         android:inputType="textMultiLine"
         android:padding="10dp"
@@ -70,7 +70,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etConvertedText"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/mindmapButton"

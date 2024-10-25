@@ -16,6 +16,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -44,13 +45,14 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
     private static final int PICK_AUDIO_REQUEST = 100, REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String OUTPUT_FILE_PATH;
-    private ImageView recordButton, playButton, stopButton, uploadButton, ivBack;
+    private ImageView recordButton, playButton, stopButton, ivBack;
     private BarVisualizer barVisualizer;
     private TextInputEditText etTitle;
     private AppCompatButton convertButton;
     private AudioRecord audioRecord;
     private MediaPlayer mediaPlayer;
     private Thread recordingThread;
+    private FrameLayout progressOverlay;
     private String title;
     private boolean isRecording = false, alreadyRecorded = false;
 
@@ -62,8 +64,6 @@ public class SpeechToTextActivity extends AppCompatActivity {
         // Initialize view
         initializeView();
 
-        uploadButton.setVisibility(View.GONE);
-
         // Create a directory for storing recordings (Internal Storage)
         File recordingDir = createInternalDirectory();
         Log.d("Directory", "Recording directory path: " + recordingDir.getPath());
@@ -74,9 +74,6 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
         // Record button click listener
         recordButton.setOnClickListener(v -> requestAudioPermissions());
-
-        // Upload button click listener
-        uploadButton.setOnClickListener(v -> selectAudioFile());
 
         // Stop button click listener
         stopButton.setOnClickListener(v -> stopRecording());
@@ -94,21 +91,11 @@ public class SpeechToTextActivity extends AppCompatActivity {
             switchStateButton(recordButton);
             if (!stopButton.isEnabled()) switchStateButton(stopButton);
             if (!playButton.isEnabled()) switchStateButton(playButton);
-
-            if (OUTPUT_FILE_PATH.contains(".wav")) {
-                if (!uploadButton.isEnabled()) switchStateButton(uploadButton);
-            }
         }
 
         // Back button click listener
         ivBack.setOnClickListener(v -> finish());
 
-    }
-
-    private void selectAudioFile() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("audio/*");
-        startActivityForResult(intent, PICK_AUDIO_REQUEST);
     }
 
     @Override
@@ -154,7 +141,8 @@ public class SpeechToTextActivity extends AppCompatActivity {
         String token = SharedPrefManager.getInstance(SpeechToTextActivity.this).getAuthToken();
         Log.d("Speech to Text", "Token: " + token);
 
-        Log.d("Speech to Text", "Uploading audio to server...");
+        // Show progress overlay
+        progressOverlay.setVisibility(View.VISIBLE);
         Call<ResponseBody> call = ApiClient.getApiService().transcribeAudio("Bearer " + token, body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -171,14 +159,17 @@ public class SpeechToTextActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    // Hide progress overlay
+                    progressOverlay.setVisibility(View.GONE);
 
-                    Toast.makeText(SpeechToTextActivity.this, "Text converted successfully", Toast.LENGTH_SHORT).show();
                     Log.d("Speech to Text", "Text: " + convertedText);
                     // Pass the text to the next activity
                     Intent intent = new Intent(SpeechToTextActivity.this, ConvertedTextActivity.class);
                     intent.putExtra("convertedText", convertedText);
                     startActivity(intent);
                 } else {
+                    // Hide progress overlay
+                    progressOverlay.setVisibility(View.GONE);
                     Toast.makeText(SpeechToTextActivity.this, "Error converting audio to text", Toast.LENGTH_SHORT).show();
                     Log.e("Speech to Text", "Error converting audio to text: " + response.code());
                 }
@@ -186,6 +177,8 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                // Hide progress overlay
+                progressOverlay.setVisibility(View.GONE);
                 Toast.makeText(SpeechToTextActivity.this, "Error converting audio to text", Toast.LENGTH_SHORT).show();
                 Log.e("Speech to Text", "Error converting audio to text: " + t.getMessage());
             }
@@ -531,9 +524,9 @@ public class SpeechToTextActivity extends AppCompatActivity {
         playButton = findViewById(R.id.playButton);
         recordButton = findViewById(R.id.recordButton);
         stopButton = findViewById(R.id.stopButton);
-        uploadButton = findViewById(R.id.uploadButton);
         convertButton = findViewById(R.id.img2txtConvertButton);
         barVisualizer = findViewById(R.id.audioVisualizerView);
+        progressOverlay = findViewById(R.id.progressOverlay);
         ivBack = findViewById(R.id.ivBack);
 
         // Set visualizer color

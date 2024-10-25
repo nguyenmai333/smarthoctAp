@@ -35,13 +35,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <ImageView
         android:id="@+id/selectedImage"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:background="@drawable/stroked_transparent_bg"
+        android:background="@drawable/stroked_white_bg"
         android:scaleType="fitCenter"
         android:padding="5dp"
         android:src="@drawable/imagemode"

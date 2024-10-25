@@ -54,16 +54,13 @@ public class MindmapViewActivity extends AppCompatActivity {
         renderMindmap(rootNodeItem, mindmapModel.getChildNodes());
 
         // Set the connection lines color and width
-        String colorHex = "#" + Integer.toHexString(ContextCompat.getColor(this, R.color.purple_200) & 0x00ffffff);
         mindMappingView.setConnectionArrowSize(10);
-        mindMappingView.setConnectionColor(colorHex);
+        mindMappingView.setConnectionColor("#000000");
         mindMappingView.setConnectionWidth(10);
         mindMappingView.setConnectionCircRadius(5);
 
         // Format the mind map structure
         formatStructure(rootNodeItem);
-
-        zoomLayout.zoomTo(1.0f, true);
     }
 
 
@@ -128,20 +125,39 @@ public class MindmapViewActivity extends AppCompatActivity {
     }
 
     private void formatStructure(Item rootNodeItem) {
-        // Set the child of root to space evenly
-        rootNodeItem.getBottomChildItems().forEach(childItem -> {
-            // Set child to left and right of root alternatively
-            if (rootNodeItem.getBottomChildItems().indexOf(childItem) % 2 == 0) {
-                childItem.setX(rootNodeItem.getX() - childItem.getMeasuredWidth());
-            } else {
-                childItem.setX(rootNodeItem.getX() + childItem.getMeasuredWidth());
-            }
-            childItem.setY(rootNodeItem.getY() * 2 + childItem.getMeasuredHeight() * 5 + rootNodeItem.getMeasuredHeight() * 3);
-            if (childItem.getBottomChildItems().size() > 0) {
+        int childCount = rootNodeItem.getBottomChildItems().size();
+        int baseSpacingX = (int) rootNodeItem.getMeasuredHeight() * 2;
+        int baseSpacingY = (int) rootNodeItem.getMeasuredWidth() * 2;
+
+        for (int i = 0; i < childCount; i++) {
+            Item childItem = rootNodeItem.getBottomChildItems().get(i);
+
+            int depthFactor = getNodeDepth(rootNodeItem);
+            int spacingX = baseSpacingX + (depthFactor * 100);
+            int spacingY = baseSpacingY + (depthFactor * 50);
+
+            int offsetX = (i - childCount / 2) * spacingX;
+            int offsetY = spacingY;
+
+            childItem.setX(rootNodeItem.getX() + offsetX * 2);
+            childItem.setY(rootNodeItem.getY() + offsetY);
+
+            if (!childItem.getBottomChildItems().isEmpty()) {
                 formatStructure(childItem);
             }
-        });
+        }
     }
+
+    private int getNodeDepth(Item node) {
+        int depth = 0;
+
+        while (!node.getParents().isEmpty()) {
+            node = node.getParents().keySet().iterator().next();
+            depth++;
+        }
+        return depth;
+    }
+
 
     private void initializeView() {
         mindMappingView = findViewById(R.id.mindMappingView);
@@ -151,7 +167,8 @@ public class MindmapViewActivity extends AppCompatActivity {
         layoutParams = new LinearLayout.LayoutParams(
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 330, getResources().getDisplayMetrics()),
                 LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        // Set the default zoom level of the MindMappingView
+        zoomLayout.zoomTo(10.0f, true);
     }
-
-
 }

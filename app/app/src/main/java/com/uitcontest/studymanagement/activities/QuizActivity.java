@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -37,6 +38,7 @@ public class QuizActivity extends AppCompatActivity {
     private String convertedText;
     private List<MCQModel> mcqList;
     private ImageView ivBack;
+    private FrameLayout progressOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,9 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void createMCQ(String convertedText) {
+        // Show progress overlay
+        progressOverlay.setVisibility(View.VISIBLE);
+
         // Generate RequestBody
         TextRequest request = new TextRequest(convertedText);
         // Call the API to generate MCQ
@@ -81,8 +86,12 @@ public class QuizActivity extends AppCompatActivity {
                         // Parse the response to MCQModel list
                         mcqList = MCQProcessor.processMCQResponse(responseString);
                         createQuestions(mcqList);
-
+                        // Hide progress overlay
+                        progressOverlay.setVisibility(View.GONE);
                     } catch (Exception e) {
+                        // Hide progress overlay
+                        progressOverlay.setVisibility(View.GONE);
+                        Toast.makeText(QuizActivity.this, "Failed to generate MCQ", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
@@ -90,6 +99,8 @@ public class QuizActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                // Hide progress overlay
+                progressOverlay.setVisibility(View.GONE);
                 Log.d("MCQ", "Failed to generate MCQ: " + t.getMessage());
                 Toast.makeText(QuizActivity.this, "Failed to generate MCQ", Toast.LENGTH_SHORT).show();
             }
@@ -205,6 +216,7 @@ public class QuizActivity extends AppCompatActivity {
     private void initializeView() {
         submitButton = findViewById(R.id.submitButton);
         questionContainer = findViewById(R.id.questionContainer);
+        progressOverlay = findViewById(R.id.progressOverlay);
         ivBack = findViewById(R.id.ivBack);
     }
 }
