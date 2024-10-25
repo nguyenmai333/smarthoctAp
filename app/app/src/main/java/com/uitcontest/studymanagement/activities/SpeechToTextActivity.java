@@ -119,7 +119,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
     private void convertAudio() {
         // Check if null or empty
         if (OUTPUT_FILE_PATH == null || OUTPUT_FILE_PATH.isEmpty()) {
-            Toast.makeText(this, "Please record or upload an audio file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No audio to convert", Toast.LENGTH_SHORT).show();
             return;
         }
         title = Objects.requireNonNull(etTitle.getText()).toString();
@@ -439,11 +439,16 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
             alreadyRecorded = true;
 
-            Log.d("Recording", "WAV file saved at: " + wavFilePath);
+            Log.d("Recording", "WAV file saved at: " + OUTPUT_FILE_PATH);
         }
     }
 
     private void playAudio(String audioFilePath) {
+        // Check for null or empty
+        if (audioFilePath == null || audioFilePath.isEmpty()) {
+            Toast.makeText(this, "No audio to play", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
             try {
