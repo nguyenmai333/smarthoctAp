@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.SharedPrefManager;
@@ -137,7 +138,11 @@ public class ImageToTextActivity extends AppCompatActivity {
                     Log.d("uploadImage", "Converted text: " + convertedText);
                     Intent intent = new Intent(ImageToTextActivity.this, ConvertedTextActivity.class);
                     intent.putExtra("convertedText", convertedText);
+                    // Reset the imageUriString to null to prevent reusing the same image
+                    imageUriString = null;
+                    selectedImage.setImageResource(R.drawable.imagemode);
                     startActivity(intent);
+                    finish();
                 } else {
                     Log.e("uploadImage", "Image upload failed with status: " + response.code());
                 }
@@ -169,14 +174,22 @@ public class ImageToTextActivity extends AppCompatActivity {
         if (imageUriString != null) {
             Uri imageUri = Uri.parse(imageUriString);
             Log.d("IMAGE URI", imageUri.toString());
-            Picasso.get().load(imageUri).placeholder(R.drawable.imagemode).into(selectedImage);
+
+            Glide.with(this)
+                    .load(imageUri)
+                    .placeholder(R.drawable.imagemode)
+                    .into(selectedImage);
         }
 
         // Get the image bitmap from the intent extras
         imageBitmap = getIntent().getParcelableExtra("imageBitmap");
         if (imageBitmap != null) {
             Log.d("IMAGE BITMAP", imageBitmap.toString());
-            selectedImage.setImageBitmap(imageBitmap);
+
+            Glide.with(this)
+                    .load(imageBitmap)
+                    .placeholder(R.drawable.imagemode)
+                    .into(selectedImage);
         }
     }
 

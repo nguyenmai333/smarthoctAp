@@ -69,8 +69,11 @@ public class SpeechToTextActivity extends AppCompatActivity {
         Log.d("Directory", "Recording directory path: " + recordingDir.getPath());
 
         // Disable stop and play button by default
-        switchStateButton(stopButton);
-        switchStateButton(playButton);
+        if(stopButton.isEnabled()) switchStateButton(stopButton);
+        if(playButton.isEnabled()) switchStateButton(playButton);
+
+        // Empty the title field
+        etTitle.setText("");
 
         // Record button click listener
         recordButton.setOnClickListener(v -> requestAudioPermissions());
@@ -95,8 +98,8 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
         // Back button click listener
         ivBack.setOnClickListener(v -> finish());
-
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -117,13 +120,17 @@ public class SpeechToTextActivity extends AppCompatActivity {
     }
 
     private void convertAudio() {
+        // Check title if somehow null
+        if (etTitle.getText() == null || etTitle.getText().toString().isEmpty()
+                || etTitle.getText().length() < 1) {
+            etTitle.setError("Please enter a title");
+            return;
+        }
         // Check if null or empty
         if (OUTPUT_FILE_PATH == null || OUTPUT_FILE_PATH.isEmpty()) {
             Toast.makeText(this, "No audio to convert", Toast.LENGTH_SHORT).show();
             return;
         }
-        title = Objects.requireNonNull(etTitle.getText()).toString();
-        isTitleValid(title);
         Toast.makeText(this, "Converting Speech to Text...", Toast.LENGTH_SHORT).show();
 
         // Create a request body from the audio file (wav)
@@ -166,6 +173,8 @@ public class SpeechToTextActivity extends AppCompatActivity {
                     // Pass the text to the next activity
                     Intent intent = new Intent(SpeechToTextActivity.this, ConvertedTextActivity.class);
                     intent.putExtra("convertedText", convertedText);
+                    // Reset all states
+                    resetStates();
                     startActivity(intent);
                 } else {
                     // Hide progress overlay
@@ -183,6 +192,16 @@ public class SpeechToTextActivity extends AppCompatActivity {
                 Log.e("Speech to Text", "Error converting audio to text: " + t.getMessage());
             }
         });
+    }
+
+    private void resetStates() {
+        // Reset all states
+        etTitle.setText("");
+        OUTPUT_FILE_PATH = null;
+        alreadyRecorded = false;
+        if(!recordButton.isEnabled()) switchStateButton(recordButton);
+        if(stopButton.isEnabled()) switchStateButton(stopButton);
+        if(playButton.isEnabled()) switchStateButton(playButton);
     }
 
     private File createInternalDirectory() {
@@ -332,6 +351,12 @@ public class SpeechToTextActivity extends AppCompatActivity {
     }
 
     private void startRecording() {
+        // Check for title before recording
+        if (etTitle.getText() == null || etTitle.getText().toString().isEmpty()
+                || etTitle.getText().length() < 1) {
+            etTitle.setError("Please enter a title");
+            return;
+        }
         Toast.makeText(this, "Recording...", Toast.LENGTH_SHORT).show();
         isRecording = true;
         int sampleRate = 44100;
@@ -411,10 +436,6 @@ public class SpeechToTextActivity extends AppCompatActivity {
             switchStateButton(recordButton);    // Re-enable record button
 
             title = Objects.requireNonNull(etTitle.getText()).toString();
-            // Check if the title is valid
-            if (!isTitleValid(title)) {
-                return;
-            }
 
             Toast.makeText(this, "Recording saved successfully", Toast.LENGTH_SHORT).show();
 
@@ -514,14 +535,6 @@ public class SpeechToTextActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private boolean isTitleValid(String title) {
-        if (title.isEmpty()) {
-            Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
     }
 
     private void initializeView() {

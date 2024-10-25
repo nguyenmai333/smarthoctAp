@@ -52,8 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/urbanist"
-            android:background="@drawable/stroked_white_bg"
-            android:hint="Enter title"
+            android:background="@drawable/stroked_rounded_white_bg"
+            android:hint="@string/enter_title"
             android:textColor="@color/black"
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
