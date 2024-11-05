@@ -19,7 +19,7 @@ async def detect_text(image: UploadFile = File(...), current_user: UserInDB = De
         image = np.array(ImageOps.exif_transpose((image)))
         
         # Khởi tạo OCRDetector và xử lý ảnh
-        detector = OCRDetector(gpu=False)
+        detector = OCRDetector(gpu=True)
         _, text_resp = detector.process_image(image)
         
         # Thêm kết quả vào processed_texts của user

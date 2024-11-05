@@ -16,7 +16,9 @@ from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 # phoBert_tokenizer = AutoTokenizer.from_pretrained('vinai/phobert-base',cache_dir=cached_path)
 # phoBert_model = AutoModel.from_pretrained('vinai/phobert-base',cache_dir=cached_path)
 
-phoWhisper_transcriber = pipeline("automatic-speech-recognition", model=pkg_resources.resource_filename('modules', 'pretrain_models/PhoWhisper-small'))
+phoWhisper_transcriber = pipeline("automatic-speech-recognition", 
+                                  model=pkg_resources.resource_filename('modules', 'pretrain_models/PhoWhisper-small'), 
+                                  device=0)
 # mbart_tokenizer = AutoTokenizer.from_pretrained('facebook/bart-large-cnn',cache_dir=cached_path)
 # mbart_model = AutoModelForSeq2SeqLM.from_pretrained('facebook/bart-large-cnn',cache_dir=cached_path)
 
