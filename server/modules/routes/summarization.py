@@ -23,16 +23,15 @@ async def summarize(request: TextRequestSummarize):
     parser = JsonOutputParser(pydantic_object=TestResponse)
 
     template = (
-        
-            "Use the given content to summarize affected by ratio."
-            "Dịch lại tiếng việt"
-        )
+        "Bạn là một trợ lý học tập giúp tóm tắt nội dung."
+        "Sử dụng nội dung cho sẳn để tóm tắt, gom ý, chịu ảnh hưởng tỉ lệ từ 1 đến 10, 1 là dài nhất, 10 là ngắn nhất."
+    )
 
     prompt = PromptTemplate(
-        template=template + "content: {content}\n ratio: {ratio}/10\n{format_instructions}",
-        input_variables=["content", "ratio"],
-        partial_variables={"format_instructions": parser.get_format_instructions()},
-    )
+    template=template + "nội dung: {content}\n tỉ lệ: {ratio}\n{format_instructions}",
+    input_variables=["content", "ratio"],
+    partial_variables={"format_instructions": parser.get_format_instructions()},
+)
 
     chain = prompt | llm | parser
     

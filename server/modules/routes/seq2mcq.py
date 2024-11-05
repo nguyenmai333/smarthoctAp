@@ -43,12 +43,9 @@ async def get_seq2mcq(TEXT: TextRequest):
     parser = JsonOutputParser(pydantic_object=mcqOb)
 
     template = (
-        # "you need translate input to english language"
-        "Use the given content to create list of some vietnamese question with 3 wrong answers and 1 true answer. Answers should not be too long"
-        "Number question depend on length of content"
-        "Dịch sang tiếng việt"
-    )
-
+    "Bạn là trợ lý hỗ trợ học tập, bạn tạo ra một vài câu hỏi trắc nghiệm với 3 câu trả lời sai và 1 câu trả lời đúng. Câu trả lời ngắn gọn."
+    "Số lượng câu hỏi dựa vào độ dài nôi dung."
+)
     prompt = PromptTemplate(
         template=template + "content: {content}\n{format_instructions}",
         input_variables=["content"],

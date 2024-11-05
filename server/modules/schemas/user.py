@@ -1,10 +1,11 @@
-from langchain_core.pydantic_v1 import BaseModel,Field
-from langchain_core.pydantic_v1 import BaseModel as BaseModelv1
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 from typing import List, Optional
 
 class TextRequest(BaseModel):
     text: str
+class TextRequestTranslate(BaseModel):
+    text: str
+    lang:str
 
 class TextRequestSummarize(BaseModel):
     text: str
@@ -26,25 +27,28 @@ class Node(BaseModel):
 
 class MindMapResponse(BaseModel):
     root: Node
-class TestResponse(BaseModelv1):
-    content: str = Field(description="Content after summarizing")
+class TestResponse(BaseModel):
+    content: str = Field(description="Nội dung sau khi tóm tắt")
+class TestResponseTranslate(BaseModel):
+    content: str = Field(description="Nội dung sau khi dich")
+    
+class _1thNode(BaseModel):
+    main_content: str = Field(description="Topic phụ của mindmap, ngắn gọn")
+    childs : Optional[List[str]] = Field(description="Danh sách các ý mang đầy đủ nghĩa, diễn giải, giải thích cho topic phụ")
+
+
+class Mindmap(BaseModel):
+    main_topic: str = Field(description="Topic chính của mindmap, ngắn gọn")
+    Childs: List[_1thNode] =Field( description="Danh sách các nội dung con diễn giải, giải thích cho topic chính")
+
     
 
-class _1thNode(BaseModelv1):
-    main_content: str = Field(description="subtopic of mindmap, concise, comprehensive")
-    childs : Optional[List[str]] = Field(description="list of subcontents, explaining subtopic")
 
-
-
-class Mindmap(BaseModelv1):
-    main_topic: str = Field(description="main topic of mindmap")
-    Childs: List[_1thNode] =Field( description="list of subcontents")
+class mcq(BaseModel):
+    Question: str = Field(description="Câu hỏi")
+    Distractor: List[str] = Field(description="danh sách 3 câu trả lời sai của câu hỏi")
+    Answer : str = Field(description="Câu trả lời đúng của câu hỏi")
     
-class mcq(BaseModelv1):
-    Question: str = Field(description="Question")
-    Distractor: List[str] = Field(description="List of 3 wrong content, not true answer of the question")
-    Answer : str = Field(description="Right answer of the question")
-        
-class mcqOb(BaseModelv1):
-    result: List[mcq] = Field(description="list of question and multiple choice answers")
+class mcqOb(BaseModel):
+    result: List[mcq] = Field(description="Danh sách các câu hỏi trắc nghiệm")
 

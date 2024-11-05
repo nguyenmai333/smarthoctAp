@@ -39,8 +39,7 @@ async def create_mindmap(request: TextListRequest):
     parser = JsonOutputParser(pydantic_object=Mindmap)
 
     template = (
-        "Use the given content to create vietnamese mindmap. "
-        "Dịch lại tiếng việt"
+        "Bạn là một trợ lý giúp tạo mindmap từ nội dung cho sẳn. Có thể thêm bớt để đủ ý."
     )
 
     prompt = PromptTemplate(

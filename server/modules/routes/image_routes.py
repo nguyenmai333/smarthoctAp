@@ -6,7 +6,7 @@ from modules.services.ocr import OCRDetector
 from datetime import datetime
 import io 
 from uuid import uuid4
-from PIL import Image
+from PIL import Image,ImageOps
 import numpy as np
 router = APIRouter()
 
@@ -16,13 +16,11 @@ async def detect_text(image: UploadFile = File(...), current_user: UserInDB = De
         # Đọc và mở ảnh từ UploadFile
         image_data = await image.read()
         image = Image.open(io.BytesIO(image_data))
-        
-        # Chuyển đổi ảnh từ PIL Image sang NumPy array
-        image_np = np.array(image)
+        image = np.array(ImageOps.exif_transpose((image)))
         
         # Khởi tạo OCRDetector và xử lý ảnh
         detector = OCRDetector(gpu=False)
-        _, text_resp = detector.process_image(image_np)
+        _, text_resp = detector.process_image(image)
         
         # Thêm kết quả vào processed_texts của user
         processed_entry = ProcessedText(id=uuid4(), text=text_resp, date=datetime.now())

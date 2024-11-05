@@ -35,3 +35,4 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
 @router.get("/users/me")
 async def read_users_me(current_user: UserInDB = Depends(get_current_user)):
     return current_user
+

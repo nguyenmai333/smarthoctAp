@@ -1,6 +1,6 @@
 import sys
 import os
-from question_generation.question_generation.pipelines import pipeline as qpl
+# from question_generation.question_generation.pipelines import pipeline as qpl
 from transformers import pipeline as tpl
 import torch
 import nltk
