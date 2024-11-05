@@ -34,24 +34,26 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from modules.services.loader import llm
 from modules.schemas.user import TextRequest,mcqOb
-
+from langdetect import detect
 router = APIRouter()
 
 @router.post("/seq2mcq")
 async def get_seq2mcq(TEXT: TextRequest):
-        
+
     parser = JsonOutputParser(pydantic_object=mcqOb)
 
     template = (
-    "Bạn là trợ lý hỗ trợ học tập, bạn tạo ra một vài câu hỏi trắc nghiệm với 3 câu trả lời sai và 1 câu trả lời đúng. Câu trả lời ngắn gọn."
-    "Số lượng câu hỏi dựa vào độ dài nôi dung."
-)
+        "You are a study assistant that creates multiple-choice questions with 3 incorrect answers and 1 correct answer. "
+        "Keep the answers concise. The output language should match the language of the content. "
+        "The number of questions should depend on the length of the content."
+    )
+
     prompt = PromptTemplate(
-        template=template + "content: {content}\n{format_instructions}",
-        input_variables=["content"],
+        template=template + "Content: {content}\nOutput Language: {output_language}\n{format_instructions}",
+        input_variables=["content", "output_language"],
         partial_variables={"format_instructions": parser.get_format_instructions()},
     )
 
     chain = prompt | llm | parser
 
-    return chain.invoke({"content":TEXT.text})
+    return  chain.invoke({"content": TEXT.text, "output_language":  detect( TEXT.text)})

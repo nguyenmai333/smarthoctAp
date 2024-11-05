@@ -34,8 +34,8 @@ phoWhisper_transcriber = pipeline("automatic-speech-recognition",
 
 llm = ChatGroq(
     model="Llama3-8b-8192",
-    api_key="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",
-    temperature=0.5,
+    api_key="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",
+    temperature=0.6,
     max_tokens=1000,
     timeout=None,
     max_retries=2

@@ -3,6 +3,7 @@ from typing import List, Optional
 
 class TextRequest(BaseModel):
     text: str
+    
 class TextRequestTranslate(BaseModel):
     text: str
     lang:str
@@ -28,7 +29,7 @@ class Node(BaseModel):
 class MindMapResponse(BaseModel):
     root: Node
 class TestResponse(BaseModel):
-    content: str = Field(description="Nội dung sau khi tóm tắt")
+    content: str = Field(description="Content after summarization")
 class TestResponseTranslate(BaseModel):
     content: str = Field(description="Nội dung sau khi dich")
     
@@ -45,10 +46,9 @@ class Mindmap(BaseModel):
 
 
 class mcq(BaseModel):
-    Question: str = Field(description="Câu hỏi")
-    Distractor: List[str] = Field(description="danh sách 3 câu trả lời sai của câu hỏi")
-    Answer : str = Field(description="Câu trả lời đúng của câu hỏi")
-    
-class mcqOb(BaseModel):
-    result: List[mcq] = Field(description="Danh sách các câu hỏi trắc nghiệm")
+    Question: str = Field(description="Question")
+    Distractor: List[str] = Field(description="List of 3 incorrect answers for the question")
+    Answer: str = Field(description="Correct answer for the question")
 
+class mcqOb(BaseModel):
+    result: List[mcq] = Field(description="List of multiple-choice questions")

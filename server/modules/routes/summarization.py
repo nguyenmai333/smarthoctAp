@@ -9,6 +9,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from modules.services.loader import llm
 from modules.schemas.user import TestResponse
+from langdetect import detect
 
 router = APIRouter()
 
@@ -19,23 +20,25 @@ async def summarize(request: TextRequestSummarize):
     # length_out = (len(input_text)*input_riot)
     # summary_text = summarize_text(translated_text,length_out)
     # translated_summary_text = translate_text(summary_text,envit5_model, envit5_tokenizer)
-    
+
     parser = JsonOutputParser(pydantic_object=TestResponse)
 
     template = (
-        "Bạn là một trợ lý học tập giúp tóm tắt nội dung."
-        "Sử dụng nội dung cho sẳn để tóm tắt, gom ý, chịu ảnh hưởng tỉ lệ từ 1 đến 10, 1 là dài nhất, 10 là ngắn nhất."
+        "You are a study assistant that helps summarize content."
+        "Use the provided content to summarize and condense the information, with a scale from 1 to 10, where 1 is the longest and 10 is the shortest."
+        "Output the result as a valid JSON object."
     )
 
     prompt = PromptTemplate(
-    template=template + "nội dung: {content}\n tỉ lệ: {ratio}\n{format_instructions}",
-    input_variables=["content", "ratio"],
-    partial_variables={"format_instructions": parser.get_format_instructions()},
-)
+        template=template + "Content: {content}\n ratio: {ratio}Output Language: {output_language}\n{format_instructions}",
+        input_variables=["content","ratio", "output_language"],
+        partial_variables={"format_instructions": parser.get_format_instructions()},
+    )
 
     chain = prompt | llm | parser
-    
-    
+
+
     return chain.invoke({"content": request.text,
-                            "ratio":request.ratio
+                            "ratio":request.ratio,
+                            "output_language":detect( request.text)
                             })
