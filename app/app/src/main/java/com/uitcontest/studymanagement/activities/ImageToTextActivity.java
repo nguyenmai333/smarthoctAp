@@ -59,8 +59,13 @@ public class ImageToTextActivity extends AppCompatActivity {
     private void convertImageToText() {
         // Handle click event
         convertButton.setOnClickListener(v -> {
-            uploadImage(imageBitmap);
-            uploadImage(Uri.parse(imageUriString));
+            if (imageBitmap != null) {
+                uploadImage(imageBitmap);
+            } else if (imageUriString != null) {
+                uploadImage(Uri.parse(imageUriString));
+            } else {
+                Log.e("convertImageToText", "Image is null");
+            }
         });
     }
 
@@ -104,7 +109,6 @@ public class ImageToTextActivity extends AppCompatActivity {
 
     private void uploadImageToServer(MultipartBody.Part body) {
         progressOverlay.setVisibility(ProgressBar.VISIBLE);
-        convertButton.setVisibility(View.GONE);
 
         Log.d("uploadImage", "Attempting to upload image");
         String token = SharedPrefManager.getInstance(this).getAuthToken();
@@ -115,7 +119,6 @@ public class ImageToTextActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     progressOverlay.setVisibility(View.GONE);
-                    convertButton.setVisibility(View.VISIBLE);
                     Log.d("uploadImage", "Image upload successful: " + response.body());
                     // Get the response content
                     String convertedText;
@@ -140,7 +143,6 @@ public class ImageToTextActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 progressOverlay.setVisibility(View.GONE);
-                convertButton.setVisibility(View.VISIBLE);
                 Log.e("uploadImage", "Image upload failed: " + t.getMessage(), t);
             }
         });
@@ -171,10 +173,9 @@ public class ImageToTextActivity extends AppCompatActivity {
         imageBitmap = getIntent().getParcelableExtra("imageBitmap");
         if (imageBitmap != null) {
             Log.d("IMAGE BITMAP", imageBitmap.toString());
-            Picasso.get().load(imageBitmap.toString()).placeholder(R.drawable.imagemode).into(selectedImage);
+            selectedImage.setImageBitmap(imageBitmap);
         }
     }
-
 
     private void initializeView() {
         selectedImage = findViewById(R.id.selectedImage);

@@ -2,6 +2,7 @@ package com.uitcontest.studymanagement.api;
 
 import com.uitcontest.studymanagement.requests.MindmapRequest;
 import com.uitcontest.studymanagement.requests.RegisterUserRequest;
+import com.uitcontest.studymanagement.requests.SummarizeRequest;
 import com.uitcontest.studymanagement.requests.TextRequest;
 
 import okhttp3.MultipartBody;
@@ -10,10 +11,12 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 public interface ApiService {
     @Multipart
@@ -36,7 +39,10 @@ public interface ApiService {
             @Field("client_id") String clientId,
             @Field("client_secret") String clientSecret
     );
-    
+
+    @GET("/users/me")
+    Call<ResponseBody> getUserInfo(@Header("Authorization") String token);
+
     @POST("/create_mindmap/")
     Call<ResponseBody> createMindmap(@Body MindmapRequest request);
 
@@ -50,4 +56,11 @@ public interface ApiService {
     @POST("/seq2mcq")
     Call<ResponseBody> generateMCQ(@Body TextRequest request);
 
+    @POST("/summarize/")
+    Call<ResponseBody> summarizeText(@Body SummarizeRequest request);
+
+    @GET("/smart-search")
+    Call<ResponseBody> smartSearch(
+            @Header("Authorization") String token,
+            @Query("query") String query);
 }

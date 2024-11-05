@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/stroked_rounded_white_bg"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tvItemText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:fontFamily="@font/urbanist"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="@string/mindmap"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textIsSelectable="false"
+        android:textSize="20sp"
+        tools:ignore="TextViewEdits" />
+
+</RelativeLayout>

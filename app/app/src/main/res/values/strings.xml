@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SmartHoctAp</string>
+    <string name="app_name">EZLearn</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -30,4 +30,11 @@
     <string name="summarizer">Summarizer</string>
     <string name="quiz">Quiz</string>
     <string name="submit">Submit</string>
+    <string name="result">Result</string>
+    <string name="query">Query</string>
+    <string name="smart_search">Smart Search</string>
+    <string name="edit">Edit</string>
+    <string name="library">Library</string>
+    <string name="processed_text">Processed Text</string>
+    <string name="date">Date</string>
 </resources>

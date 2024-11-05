@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -90,9 +91,9 @@ public class QuizActivity extends AppCompatActivity {
         });
     }
 
-    private void createQuestions(List<MCQModel> mcqModels) {
-        for (int i = 0; i < mcqModels.size(); i++) {
-            MCQModel mcqModel = mcqModels.get(i);
+    private void createQuestions(List<MCQModel> mcqList) {
+        for (int i = 0; i < mcqList.size(); i++) {
+            MCQModel mcqModel = mcqList.get(i);
             LinearLayout questionLayout = createSingleQuestion(mcqModel, i + 1);
             questionContainer.addView(questionLayout);
         }
@@ -104,12 +105,21 @@ public class QuizActivity extends AppCompatActivity {
 
         LinearLayout questionLayout = new LinearLayout(this);
         questionLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(0, 20, 0, 20); // Add top and bottom margin for spacing
+
+        questionLayout.setLayoutParams(layoutParams);
         questionLayout.addView(questionTextView);
         questionLayout.addView(radioGroup);
 
         return questionLayout;
     }
 
+    @SuppressLint("SetTextI18n")
     private TextView createQuestionTextView(int questionNumber, String questionTitle) {
         TextView questionTextView = new TextView(this);
         questionTextView.setText("Question " + questionNumber + ": " + questionTitle);
