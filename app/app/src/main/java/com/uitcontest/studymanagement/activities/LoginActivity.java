@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.SharedPrefManager;
 import com.uitcontest.studymanagement.api.ApiClient;
@@ -26,6 +27,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private TextInputLayout emailTextInputLayout, passwordTextInputLayout;
     private TextInputEditText emailEditText, passwordEditText;
     private TextView forgotPasswordTextView, registerNowTextView;
     private AppCompatButton loginButton;
@@ -58,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleForgotPassword() {
+        forgotPasswordTextView.setVisibility(TextView.INVISIBLE);
     }
 
     private void handleLogin() {
@@ -65,9 +68,20 @@ public class LoginActivity extends AppCompatActivity {
         String password = Objects.requireNonNull(passwordEditText.getText()).toString().trim();
 
         // Basic validation checks
-        if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please enter username and password", Toast.LENGTH_SHORT).show();
+        if (username.isEmpty()) {
+            emailTextInputLayout.setError("Email is required");
+            emailTextInputLayout.requestFocus();
             return;
+        } else {
+            emailTextInputLayout.setError(null); // Clear previous error
+        }
+
+        if (password.isEmpty()) {
+            passwordTextInputLayout.setError("Password is required");
+            passwordTextInputLayout.requestFocus();
+            return;
+        } else {
+            passwordTextInputLayout.setError(null); // Clear previous error
         }
 
         // Set OAuth2 parameters
@@ -102,7 +116,19 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login Failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                    // Show server error message if login fails
+                    String errorMessage = "Invalid email or password";
+                    if (response.errorBody() != null) {
+                        try {
+                            errorMessage = response.errorBody().string();
+                            // Remove json formatting
+                            errorMessage = errorMessage.substring(11, errorMessage.length() - 2);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                    Log.d("Login", "Login Failed: " + response.message());
                 }
             }
 
@@ -123,8 +149,11 @@ public class LoginActivity extends AppCompatActivity {
     private void initializeView() {
         emailEditText = findViewById(R.id.etEmailText);
         passwordEditText = findViewById(R.id.etPasswordText);
+        emailTextInputLayout = findViewById(R.id.etEmailLayout);
+        passwordTextInputLayout = findViewById(R.id.etPasswordLayout);
         forgotPasswordTextView = findViewById(R.id.tvForgotPassword);
         registerNowTextView = findViewById(R.id.tvRegisterNow);
         loginButton = findViewById(R.id.loginButton);
+        forgotPasswordTextView.setVisibility(TextView.INVISIBLE);
     }
 }

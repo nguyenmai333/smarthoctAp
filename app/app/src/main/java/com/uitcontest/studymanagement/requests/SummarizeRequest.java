@@ -2,9 +2,9 @@ package com.uitcontest.studymanagement.requests;
 
 public class SummarizeRequest {
     public String text;
-    public int ratio;
+    public float ratio;
 
-    public SummarizeRequest(String text, int ratio) {
+    public SummarizeRequest(String text, float ratio) {
         this.text = text;
         this.ratio = ratio;
     }
@@ -17,7 +17,7 @@ public class SummarizeRequest {
         this.text = text;
     }
 
-    public int getRatio() {
+    public float getRatio() {
         return ratio;
     }
 

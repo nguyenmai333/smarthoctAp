@@ -1,5 +1,6 @@
 package com.uitcontest.studymanagement.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,7 +22,7 @@ import com.uitcontest.studymanagement.models.UserModel;
 public class ProfileInfoActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView profileImageView;
+    private ImageView profileImageView, ivBack;
     private TextInputEditText usernameEditText, emailEditText, nameEditText;
     private Spinner genderSpinner;
     private AppCompatButton editSaveButton;
@@ -45,6 +46,9 @@ public class ProfileInfoActivity extends AppCompatActivity {
 
         // Handle profile image click
         handleProfileImageClick();
+
+        // Handle back button
+        ivBack.setOnClickListener(v -> finish());
     }
 
     private void handleProfileImageClick() {
@@ -56,6 +60,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void viewMode() {
         // Change button text to "Edit"
         editSaveButton.setText("Edit");
@@ -81,6 +86,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
         saveUserInfo();
     }
 
+    @SuppressLint({"SetTextI18n", "UseCompatTextViewDrawableApis"})
     private void editMode() {
         // Change button text to "Save"
         editSaveButton.setText("Save");
@@ -191,6 +197,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
         nameEditText = findViewById(R.id.etProfileNameText);
         genderSpinner = findViewById(R.id.spinnerProfileGender);
         editSaveButton = findViewById(R.id.btnProfileEditSave);
+        ivBack = findViewById(R.id.ivBack);
     }
 
 }

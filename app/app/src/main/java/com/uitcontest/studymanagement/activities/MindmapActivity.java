@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.uitcontest.studymanagement.adapters.MindmapNodeAdapter;
 import com.uitcontest.studymanagement.requests.MindmapRequest;
@@ -32,6 +34,8 @@ public class MindmapActivity extends AppCompatActivity {
     private AppCompatButton addButton, createButton;
     private List<String> documents = new ArrayList<>();
     private MindmapNodeAdapter mindmapNodeAdapter;
+    private ImageView ivBack;
+    private FrameLayout progressOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,9 @@ public class MindmapActivity extends AppCompatActivity {
 
         // Handle create button click
         createButton.setOnClickListener(v -> createMindmap());
+
+        // Handle back button click
+        ivBack.setOnClickListener(v -> finish());
     }
 
     @Override
@@ -94,6 +101,9 @@ public class MindmapActivity extends AppCompatActivity {
     }
 
     private void createMindmap() {
+        // Show progress overlay
+        progressOverlay.setVisibility(FrameLayout.VISIBLE);
+
         // Create request
         MindmapRequest request = new MindmapRequest(documents);
 
@@ -103,6 +113,7 @@ public class MindmapActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
+                    progressOverlay.setVisibility(FrameLayout.GONE);
                     Log.d("MindmapModel", "MindmapModel created successfully");
                     String mindmap = null;
                     try {
@@ -117,6 +128,7 @@ public class MindmapActivity extends AppCompatActivity {
                     intent.putExtra("mindmap", mindmap);
                     startActivity(intent);
                 } else {
+                    progressOverlay.setVisibility(FrameLayout.GONE);
                     Log.e("MindmapModel", "Failed to create mindmap: " + response.code());
                     // Get detail error
                     try {
@@ -130,6 +142,7 @@ public class MindmapActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
+                progressOverlay.setVisibility(FrameLayout.GONE);
                 Log.e("MindmapModel", "Error: " + throwable.getMessage());
             }
         });
@@ -145,6 +158,8 @@ public class MindmapActivity extends AppCompatActivity {
         documentList = findViewById(R.id.documentList);
         addButton = findViewById(R.id.addButton);
         createButton = findViewById(R.id.createButton);
+        ivBack = findViewById(R.id.ivBack);
+        progressOverlay = findViewById(R.id.progressOverlay);
 
         // Set up RecyclerView after getting the documents
         mindmapNodeAdapter = new MindmapNodeAdapter(this, documents);

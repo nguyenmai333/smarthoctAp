@@ -9,8 +9,13 @@ import android.app.AlertDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -35,6 +40,8 @@ public class QuizActivity extends AppCompatActivity {
     private LinearLayout questionContainer;
     private String convertedText;
     private List<MCQModel> mcqList;
+    private ImageView ivBack;
+    private FrameLayout progressOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +59,9 @@ public class QuizActivity extends AppCompatActivity {
 
         // Handle submit button click
         submitButton.setOnClickListener(v -> validateAndSubmitAnswers());
+
+        // Handle back button click
+        ivBack.setOnClickListener(v -> finish());
     }
 
     private void getConvertedText() {
@@ -60,6 +70,9 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void createMCQ(String convertedText) {
+        // Show progress overlay
+        progressOverlay.setVisibility(View.VISIBLE);
+
         // Generate RequestBody
         TextRequest request = new TextRequest(convertedText);
         // Call the API to generate MCQ
@@ -69,6 +82,7 @@ public class QuizActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
+                        toggleOverlay();
                         assert response.body() != null;
                         String responseString = response.body().string();
                         Log.d("MCQ", "MCQ Response: " + responseString);
@@ -76,8 +90,9 @@ public class QuizActivity extends AppCompatActivity {
                         // Parse the response to MCQModel list
                         mcqList = MCQProcessor.processMCQResponse(responseString);
                         createQuestions(mcqList);
-
                     } catch (Exception e) {
+                        toggleOverlay();
+                        Toast.makeText(QuizActivity.this, "Failed to generate MCQ", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
@@ -85,10 +100,27 @@ public class QuizActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                toggleOverlay();
                 Log.d("MCQ", "Failed to generate MCQ: " + t.getMessage());
                 Toast.makeText(QuizActivity.this, "Failed to generate MCQ", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void toggleOverlay() {
+        if (progressOverlay.getVisibility() == ProgressBar.VISIBLE) {
+            // Hide progress overlay
+            progressOverlay.setVisibility(ProgressBar.GONE);
+            // Enable all interaction
+            submitButton.setEnabled(true);
+            questionContainer.setEnabled(true);
+        } else {
+            // Show progress overlay
+            progressOverlay.setVisibility(ProgressBar.VISIBLE);
+            // Disable all interaction
+            submitButton.setEnabled(false);
+            questionContainer.setEnabled(false);
+        }
     }
 
     private void createQuestions(List<MCQModel> mcqList) {
@@ -178,18 +210,39 @@ public class QuizActivity extends AppCompatActivity {
         if (allQuestionsAnswered) {
             showResultDialog(result.toString(), correctAnswers);
         } else {
+            // Show un-answered questions required
+            for (int i = 0; i < questionContainer.getChildCount(); i++) {
+                View child = questionContainer.getChildAt(i);
+                if (child instanceof LinearLayout) {
+                    RadioGroup radioGroup = (RadioGroup) ((LinearLayout) child).getChildAt(1);
+                    int selectedId = radioGroup.getCheckedRadioButtonId();
+                    if (selectedId == -1) {
+                        radioGroup.requestFocus();
+                        break;
+                    }
+                }
+            }
+
+            // Show toast to answer all questions
             Toast.makeText(QuizActivity.this, "Please answer all questions", Toast.LENGTH_SHORT).show();
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void showResultDialog(String result, int correctAnswers) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Quiz Results");
-        builder.setMessage(result + "\nTotal Correct Answers: " + correctAnswers);
-        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_quiz_result, null);
 
-        // Show the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+        TextView tvCorrectAnswers = dialogView.findViewById(R.id.tvCorrectAnswers);
+        tvCorrectAnswers.setText(result + "\nTotal Correct Answers: " + correctAnswers);
+
+        Button btnOk = dialogView.findViewById(R.id.quizOKButton);
+
+        // Create and show the dialog
         AlertDialog dialog = builder.create();
+        btnOk.setOnClickListener(view -> dialog.dismiss());
         dialog.show();
     }
 
@@ -200,5 +253,7 @@ public class QuizActivity extends AppCompatActivity {
     private void initializeView() {
         submitButton = findViewById(R.id.submitButton);
         questionContainer = findViewById(R.id.questionContainer);
+        progressOverlay = findViewById(R.id.progressOverlay);
+        ivBack = findViewById(R.id.ivBack);
     }
 }

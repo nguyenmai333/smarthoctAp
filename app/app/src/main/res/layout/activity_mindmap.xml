@@ -7,6 +7,36 @@
     android:background="@drawable/main_background"
     tools:context=".activities.MindmapActivity">
 
+    <FrameLayout
+        android:id="@+id/progressOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:elevation="20dp"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/teal_200"
+            style="@android:style/Widget.Material.Light.ProgressBar.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/ivBack"
+        android:src="@drawable/arrow_back"
+        app:tint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.05"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
     <TextView
         android:id="@+id/tvMindmap"
         android:layout_width="wrap_content"
@@ -22,14 +52,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/documentList"
         android:layout_width="360dp"
         android:layout_height="300dp"
         android:layout_marginTop="60dp"
-        android:background="@drawable/stroked_rounded_transparent_bg"
+        android:background="@drawable/stroked_rounded_white_bg"
         android:textAlignment="textStart"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -53,7 +83,7 @@
         app:layout_constraintEnd_toStartOf="@+id/createButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintVertical_bias="0.85" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/createButton"
@@ -70,6 +100,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/addButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintVertical_bias="0.85" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

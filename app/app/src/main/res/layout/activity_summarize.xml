@@ -7,6 +7,19 @@
     android:background="@drawable/main_background"
     tools:context=".activities.SummarizeActivity">
 
+    <ImageView
+        android:id="@+id/ivBack"
+        android:src="@drawable/arrow_back"
+        app:tint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.05"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
     <FrameLayout
         android:id="@+id/progressOverlay"
         app:layout_constraintRight_toRightOf="parent"
@@ -43,13 +56,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <EditText
         android:id="@+id/etSummarizeText"
         android:layout_width="330dp"
         android:layout_height="120dp"
-        android:background="@drawable/stroked_rounded_transparent_bg"
+        android:background="@drawable/stroked_rounded_white_bg"
         android:fontFamily="@font/urbanist"
         android:inputType="textMultiLine"
         android:padding="10dp"
@@ -88,6 +101,7 @@
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/urbanist_bold"
                 android:gravity="center"
+                android:textColor="@color/black"
                 android:text="Long"
                 android:textSize="18sp" />
 
@@ -102,6 +116,7 @@
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/urbanist_bold"
                 android:gravity="center"
+                android:textColor="@color/black"
                 android:text="Short"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -111,7 +126,7 @@
             style="@style/ModernSeekBar"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:max="10" />
+            android:max="9" />
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -135,7 +150,7 @@
         android:id="@+id/etSummarizedText"
         android:layout_width="330dp"
         android:layout_height="120dp"
-        android:background="@drawable/stroked_rounded_transparent_bg"
+        android:background="@drawable/stroked_rounded_white_bg"
         android:fontFamily="@font/urbanist"
         android:inputType="textMultiLine"
         android:padding="10dp"

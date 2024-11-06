@@ -37,4 +37,5 @@
     <string name="library">Library</string>
     <string name="processed_text">Processed Text</string>
     <string name="date">Date</string>
+    <string name="enter_title">Enter title <font color='#FF0000'>*</font></string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.SharedPrefManager;
@@ -34,7 +35,7 @@ import retrofit2.Response;
 
 public class ImageToTextActivity extends AppCompatActivity {
 
-    private ImageView selectedImage;
+    private ImageView selectedImage, ivBack;
     private AppCompatButton convertButton;
     private Bitmap imageBitmap = null;
     private String imageUriString = null;
@@ -53,6 +54,9 @@ public class ImageToTextActivity extends AppCompatActivity {
     
         // Handle convert image to text
         convertImageToText();
+
+        // Handle back button
+        ivBack.setOnClickListener(v -> finish());
     
     }
 
@@ -134,7 +138,11 @@ public class ImageToTextActivity extends AppCompatActivity {
                     Log.d("uploadImage", "Converted text: " + convertedText);
                     Intent intent = new Intent(ImageToTextActivity.this, ConvertedTextActivity.class);
                     intent.putExtra("convertedText", convertedText);
+                    // Reset the imageUriString to null to prevent reusing the same image
+                    imageUriString = null;
+                    selectedImage.setImageResource(R.drawable.imagemode);
                     startActivity(intent);
+                    finish();
                 } else {
                     Log.e("uploadImage", "Image upload failed with status: " + response.code());
                 }
@@ -146,6 +154,20 @@ public class ImageToTextActivity extends AppCompatActivity {
                 Log.e("uploadImage", "Image upload failed: " + t.getMessage(), t);
             }
         });
+    }
+
+    private void toggleOverlay() {
+        if (progressOverlay.getVisibility() == ProgressBar.VISIBLE) {
+            // Hide overlay
+            progressOverlay.setVisibility(View.GONE);
+            // Enable interaction
+            convertButton.setEnabled(true);
+        } else {
+            // Show overlay
+            progressOverlay.setVisibility(View.VISIBLE);
+            // Disable interaction
+            convertButton.setEnabled(false);
+        }
     }
 
     // Utility method to convert InputStream to byte array
@@ -166,14 +188,22 @@ public class ImageToTextActivity extends AppCompatActivity {
         if (imageUriString != null) {
             Uri imageUri = Uri.parse(imageUriString);
             Log.d("IMAGE URI", imageUri.toString());
-            Picasso.get().load(imageUri).placeholder(R.drawable.imagemode).into(selectedImage);
+
+            Glide.with(this)
+                    .load(imageUri)
+                    .placeholder(R.drawable.imagemode)
+                    .into(selectedImage);
         }
 
         // Get the image bitmap from the intent extras
         imageBitmap = getIntent().getParcelableExtra("imageBitmap");
         if (imageBitmap != null) {
             Log.d("IMAGE BITMAP", imageBitmap.toString());
-            selectedImage.setImageBitmap(imageBitmap);
+
+            Glide.with(this)
+                    .load(imageBitmap)
+                    .placeholder(R.drawable.imagemode)
+                    .into(selectedImage);
         }
     }
 
@@ -181,5 +211,6 @@ public class ImageToTextActivity extends AppCompatActivity {
         selectedImage = findViewById(R.id.selectedImage);
         convertButton = findViewById(R.id.img2txtConvertButton);
         progressOverlay = findViewById(R.id.progressOverlay);
+        ivBack = findViewById(R.id.ivBack);
     }
 }

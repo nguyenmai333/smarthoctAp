@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.adapters.ProcessedTextAdapter;
@@ -19,7 +20,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private RecyclerView rvProcessedText;
     private List<ProcessedTextModel> processedTextModelList;
-    private ProcessedTextAdapter processedTextAdapter;
+    private ImageView ivBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +34,12 @@ public class LibraryActivity extends AppCompatActivity {
         getProcessedText();
 
         // Set adapter
-        processedTextAdapter = new ProcessedTextAdapter(this, processedTextModelList);
+        ProcessedTextAdapter processedTextAdapter = new ProcessedTextAdapter(this, processedTextModelList);
         rvProcessedText.setAdapter(processedTextAdapter);
         processedTextAdapter.notifyDataSetChanged();
+
+        // Handle back
+        ivBack.setOnClickListener(v -> finish());
     }
 
     private void getProcessedText() {
@@ -49,6 +53,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void initializeView() {
         rvProcessedText = findViewById(R.id.documentRecyclerView);
+        ivBack = findViewById(R.id.ivBack);
 
         // Set layout
         rvProcessedText.setLayoutManager(new LinearLayoutManager(this));

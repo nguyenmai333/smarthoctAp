@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.uitcontest.studymanagement.R;
@@ -17,6 +18,7 @@ public class ConvertedTextActivity extends AppCompatActivity {
 
     private EditText convertedText;
     private AppCompatButton summarizeButton, mindmapButton, quizButton;
+    private ImageView ivBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class ConvertedTextActivity extends AppCompatActivity {
 
         // Handle quiz button click
         quizButton.setOnClickListener(v -> createQuiz());
+
+        // Handle back button click
+        ivBack.setOnClickListener(v -> finish());
     }
 
     private void createQuiz() {
@@ -91,5 +96,6 @@ public class ConvertedTextActivity extends AppCompatActivity {
         summarizeButton = findViewById(R.id.summarizeButton);
         mindmapButton = findViewById(R.id.mindmapButton);
         quizButton = findViewById(R.id.quizButton);
+        ivBack = findViewById(R.id.ivBack);
     }
 }
