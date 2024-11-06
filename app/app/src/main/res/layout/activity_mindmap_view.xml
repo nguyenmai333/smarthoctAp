@@ -1,38 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<me.jagar.mindmappingandroidlibrary.Zoom.ZoomLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/zoomLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:scrollbars="vertical|horizontal"
-    app:alignment="top"
-    app:animationDuration="280"
-    app:flingEnabled="false"
-    app:hasClickableChildren="true"
-    app:horizontalPanEnabled="true"
-    app:maxZoom="15"
-    app:maxZoomType="zoom"
-    app:minZoom="0.5"
-    app:minZoomType="zoom"
-    app:oneFingerScrollEnabled="false"
-    app:overPinchable="true"
-    app:overScrollHorizontal="true"
-    app:overScrollVertical="true"
-    app:scrollEnabled="true"
-    app:threeFingersScrollEnabled="true"
-    app:transformation="centerInside"
-    app:transformationGravity="top"
-    app:twoFingersScrollEnabled="true"
-    app:verticalPanEnabled="true"
-    app:zoomEnabled="true"
-    tools:context=".activities.MindmapViewActivity">
+    android:layout_height="match_parent">
 
-    <me.jagar.mindmappingandroidlibrary.Views.MindMappingView
-        android:id="@+id/mindMappingView"
-        android:layout_width="3000dp"
-        android:layout_height="3000dp"
-        android:background="@color/white" />
+    <me.jagar.mindmappingandroidlibrary.Zoom.ZoomLayout
+        android:id="@+id/zoomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:scrollbars="vertical|horizontal"
+        app:alignment="top"
+        app:animationDuration="280"
+        app:flingEnabled="false"
+        app:hasClickableChildren="true"
+        app:horizontalPanEnabled="true"
+        app:maxZoom="15"
+        app:maxZoomType="zoom"
+        app:minZoom="0.5"
+        app:minZoomType="zoom"
+        app:oneFingerScrollEnabled="false"
+        app:overPinchable="true"
+        app:overScrollHorizontal="true"
+        app:overScrollVertical="true"
+        app:scrollEnabled="true"
+        app:threeFingersScrollEnabled="true"
+        app:transformation="centerInside"
+        app:transformationGravity="top"
+        app:twoFingersScrollEnabled="true"
+        app:verticalPanEnabled="true"
+        app:zoomEnabled="true"
+        tools:context=".activities.MindmapViewActivity">
 
-</me.jagar.mindmappingandroidlibrary.Zoom.ZoomLayout>
+        <me.jagar.mindmappingandroidlibrary.Views.MindMappingView
+            android:id="@+id/mindMappingView"
+            android:layout_width="3000dp"
+            android:layout_height="3000dp"
+            android:background="@color/white" />
+
+    </me.jagar.mindmappingandroidlibrary.Zoom.ZoomLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/arrow_back"
+        android:contentDescription="Back" />
+
+</FrameLayout>

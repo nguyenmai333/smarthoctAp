@@ -126,7 +126,7 @@
             style="@style/ModernSeekBar"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:max="10" />
+            android:max="9" />
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton

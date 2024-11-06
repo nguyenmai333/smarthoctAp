@@ -53,6 +53,28 @@ public class RegisterActivity extends AppCompatActivity {
         loginNowTextView.setOnClickListener(v -> handleLoginNow());
     }
 
+    private boolean isAnyFieldEmpty(TextInputEditText... fields) {
+        boolean isEmpty = false;
+        for (TextInputEditText field : fields) {
+            if (Objects.requireNonNull(field.getText()).toString().isEmpty()) {
+                showError(field);
+                isEmpty = true;
+            }
+        }
+        return isEmpty;
+    }
+
+    private void showError(TextInputEditText field) {
+        field.setError("This field is required");
+        field.requestFocus();
+    }
+
+    private void showRadioGroupError(RadioGroup radioGroup) {
+        TextView errorText = (TextView) radioGroup.getChildAt(radioGroup.getChildCount() - 1);
+        errorText.setError("Please select your gender");
+        errorText.requestFocus();
+    }
+
     private void handleLoginNow() {
         switchActivity(this);
     }
@@ -64,16 +86,15 @@ public class RegisterActivity extends AppCompatActivity {
         String fullname = Objects.requireNonNull(Objects.requireNonNull(fullnameEditText.getText()).toString());
         int selectedGenderId = genderRadioGroup.getCheckedRadioButtonId();
 
-        if (selectedGenderId == -1) {
-            Toast.makeText(this, "Please select your gender", Toast.LENGTH_SHORT).show();
+        if (isAnyFieldEmpty(usernameEditText, emailEditText, passwordEditText, fullnameEditText)) {
             return;
         }
 
-        // Basic validation checks
-        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || fullname.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+        if (selectedGenderId == -1) {
+            showRadioGroupError(genderRadioGroup);
             return;
         }
+
         RadioButton selectedGenderRadioButton = findViewById(selectedGenderId);
         String gender = selectedGenderRadioButton.getText().toString();
 
@@ -95,12 +116,13 @@ public class RegisterActivity extends AppCompatActivity {
                     try {
                         assert response.errorBody() != null;
                         String errorBody = response.errorBody().string();
+                        // Format json
+                        errorBody = errorBody.substring(1, errorBody.length() - 1);
                         Log.e("RegisterActivity", "Error response: " + errorBody);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-
+                    
                     Toast.makeText(RegisterActivity.this, "Registration Failed: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }

@@ -156,6 +156,20 @@ public class ImageToTextActivity extends AppCompatActivity {
         });
     }
 
+    private void toggleOverlay() {
+        if (progressOverlay.getVisibility() == ProgressBar.VISIBLE) {
+            // Hide overlay
+            progressOverlay.setVisibility(View.GONE);
+            // Enable interaction
+            convertButton.setEnabled(true);
+        } else {
+            // Show overlay
+            progressOverlay.setVisibility(View.VISIBLE);
+            // Disable interaction
+            convertButton.setEnabled(false);
+        }
+    }
+
     // Utility method to convert InputStream to byte array
     private byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();

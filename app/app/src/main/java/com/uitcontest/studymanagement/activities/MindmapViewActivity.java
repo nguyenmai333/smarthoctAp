@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.uitcontest.studymanagement.R;
 import com.uitcontest.studymanagement.models.MindmapModel;
@@ -25,6 +26,7 @@ public class MindmapViewActivity extends AppCompatActivity {
 
     private MindMappingView mindMappingView;
     private LinearLayout.LayoutParams layoutParams;
+    private FloatingActionButton fabReturn;
     private ZoomLayout zoomLayout;
     private Item rootNodeItem;
 
@@ -61,6 +63,9 @@ public class MindmapViewActivity extends AppCompatActivity {
 
         // Format the mind map structure
         formatStructure(rootNodeItem);
+
+        // Handle return button click
+        fabReturn.setOnClickListener(v -> finish());
     }
 
 
@@ -137,7 +142,7 @@ public class MindmapViewActivity extends AppCompatActivity {
             int spacingY = baseSpacingY + (depthFactor * 50);
 
             int offsetX = (i - childCount / 2) * spacingX;
-            int offsetY = spacingY;
+            int offsetY = (i % 2 == 0) ? spacingY : spacingY / 2;
 
             childItem.setX(rootNodeItem.getX() + offsetX * 2);
             childItem.setY(rootNodeItem.getY() + offsetY);
@@ -162,6 +167,7 @@ public class MindmapViewActivity extends AppCompatActivity {
     private void initializeView() {
         mindMappingView = findViewById(R.id.mindMappingView);
         zoomLayout = findViewById(R.id.zoomLayout);
+        fabReturn = findViewById(R.id.fab_return);
 
         // Layout params for the MindMappingView
         layoutParams = new LinearLayout.LayoutParams(
