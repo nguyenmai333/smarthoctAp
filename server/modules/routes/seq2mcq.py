@@ -32,38 +32,28 @@
 from fastapi import APIRouter,HTTPException
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
-from modules.services.process_func import llm
+from modules.services.loader import llm
 from modules.schemas.user import TextRequest,mcqOb
-
+from langdetect import detect
 router = APIRouter()
 
 @router.post("/seq2mcq")
 async def get_seq2mcq(TEXT: TextRequest):
-    
-    try:
-        
-        
-        
-        parser = JsonOutputParser(pydantic_object=mcqOb)
 
-        template = (
-            # "you need translate input to english language"
-            "Use the given content to create list of some vietnamese question with 3 wrong answers and 1 true answer. Answers should not be too long"
-            "Number question depend on length of content"
-            "Dịch sang tiếng việt"
-        )
+    parser = JsonOutputParser(pydantic_object=mcqOb)
 
-        prompt = PromptTemplate(
-            template=template + "content: {content}\n{format_instructions}",
-            input_variables=["content"],
-            partial_variables={"format_instructions": parser.get_format_instructions()},
-        )
+    template = (
+        "You are a study assistant that creates multiple-choice questions with 3 incorrect answers and 1 correct answer. "
+        "Keep the answers concise. The output language should match the language of the content. "
+        "The number of questions should depend on the length of the content."
+    )
 
-        chain = prompt | llm | parser
+    prompt = PromptTemplate(
+        template=template + "Content: {content}\nOutput Language: {output_language}\n{format_instructions}",
+        input_variables=["content", "output_language"],
+        partial_variables={"format_instructions": parser.get_format_instructions()},
+    )
 
-        return chain.invoke({"content":TEXT.text})
-    
+    chain = prompt | llm | parser
 
-    except Exception as e:
-        # Handle specific exceptions or log the error
-        raise HTTPException(status_code=500, detail=str(e))
+    return  chain.invoke({"content": TEXT.text, "output_language":  detect( TEXT.text)})

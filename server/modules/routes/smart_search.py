@@ -8,11 +8,10 @@ from modules.models.user import UserInDB
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from modules.services.process_func import llm
+from modules.services.loader import llm,embedding_model
 from langchain.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores.utils import DistanceStrategy
-from modules.services.process_func import embedding_model
 
 from langchain.schema.document import Document
 router = APIRouter()

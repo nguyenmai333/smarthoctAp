@@ -2,5 +2,7 @@ server/seq2mcq/t5_summary_model.pkl
 server/ocr/uploads
 __pycache__/
 server/seq2mcq/question_generation
+server/modules/pretrain_models
+server/.env
 #Android Studio
 .idea
